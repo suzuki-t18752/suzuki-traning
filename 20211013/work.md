@@ -31,12 +31,18 @@ path /opt/suzuki/current/log/application.log
 ## git
 ### hotfix
 緊急性の高いバグの修正等
-https://e-words.jp/w/%E3%83%9B%E3%83%83%E3%83%88%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF%E3%82%B9.html
+[参考](https://e-words.jp/w/%E3%83%9B%E3%83%83%E3%83%88%E3%83%95%E3%82%A3%E3%83%83%E3%82%AF%E3%82%B9.html)
 ### feature
 新機能の作成や緊急性のない改修等
-https://e-words.jp/w/%E3%83%95%E3%82%A3%E3%83%BC%E3%83%81%E3%83%A3%E3%83%BC.html
+[参考](https://e-words.jp/w/%E3%83%95%E3%82%A3%E3%83%BC%E3%83%81%E3%83%A3%E3%83%BC.html)
 
 ### 基本操作
 1. ローカルのサブブランチにてadd,commit,push
 2. リモートのサブブランチにてpullrequest、merge
 3. ローカルのメインブランチにてpull
+
+- ブランチの一覧(現在のブランチは*が前に付いている) git branch --list
+- ブランチの移動 git checkout main(移動したいブランチ名)
+  - -bで新規ブランチの作成しつつ移動が出来る
+
+
