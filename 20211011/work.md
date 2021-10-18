@@ -267,7 +267,7 @@ https://cloudo3.com/ja/%E3%82%AF%E3%83%A9%E3%82%A6%E3%83%88%E3%82%99%E3%82%B3%E3
 Listen 80 -> Listen 8080
 
 #8080portにてapache起動
-[suzuki@suzuki-t varnish-7.0.0]$ sudo /usr/local/httpd/httpd-2.4.48/bin/apachectl stop
+[suzuki@suzuki-t varnish-7.0.0]$ sudo /usr/local/httpd/httpd-2.4.48/bin/apachectl start
 
 #varnish起動
 [suzuki@suzuki-t varnish-7.0.0]$ sudo /usr/local/sbin/varnishd -a :80 -b suzuki-t.com:8080
