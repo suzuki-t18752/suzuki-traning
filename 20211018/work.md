@@ -294,7 +294,7 @@ Listen 80 -> Listen 8080
 [suzuki@suzuki-t varnish-7.0.0]$ sudo /usr/local/httpd/httpd-2.4.48/bin/apachectl start
 
 #varnish起動
-[suzuki@suzuki-t varnish-7.0.0]$ sudo /usr/local/varnish/sbin/varnishd -a :80 -b suzuki-t.com:8080
+[suzuki@suzuki-t varnish-7.0.0]$ sudo /usr/local/varnish/sbin/varnishd -a :80 -b 192.168.56.3:8080
 
 #確認
 [suzuki@suzuki-t ~]$ curl -I http://suzuki-t.com/wordpress
