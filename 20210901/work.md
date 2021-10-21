@@ -1,13 +1,3 @@
-# 本日の作業
-## １.PCのセットアップ
-* WindowsUpdateの実施
-* eset(セキュリティソフト)のインストール
-* vscode(テキストエディター)のインストール
-* slack(チャットアプリ)のインストール
-* GoogleChromeのインストール
-* bitlockerのセットアップ
-
-  
 ## 2.virtualboxのインストール
 
 [インストール元](https://www.virtualbox.org/wiki/Downloads)
