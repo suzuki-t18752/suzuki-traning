@@ -61,14 +61,14 @@ DB_PASSWORD=$(grep "A temporary password is generated" /var/log/mariadb/mariadb.
 - wordpress2 user
 
 
-mysql57_root resuraku0901
-mysql56_root resuraku0901
-mysql57_wp resuraku0901
-mysql56_wp resuraku0901
+mysql57_root suzuki0901
+mysql56_root suzuki0901
+mysql57_wp suzuki0901
+mysql56_wp suzuki0901
 basic xgKrcUG9iefRQ
 digest 9dd2a825562f7e0b1af6f1ec1ff97c3c
-wp_user_com resuraku0901
-wp_user_net resuraku0901
+wp_user_com suzuki0901
+wp_user_net suzuki0901
 
 mysql57_root_pass=$(cat /root/root.txt | grep mysql57_root | awk '{print $2}')
 mysql56_root_pass=$(cat /root/root.txt | grep mysql56_root | awk '{print $2}')
@@ -90,14 +90,14 @@ MINIENTREGA_DESTINO="./destino/entrega-prac1"
 #反映
 export $(cat env | xargs)
 
-MYSQL57_ROOT_PASS=resuraku0901
-MYSQL56_ROOT_PASS=resuraku0901
-MYSQL57_WP_PASS=resuraku0901
-MYSQL56_WP_PASS=resuraku0901
+MYSQL57_ROOT_PASS=suzuki0901
+MYSQL56_ROOT_PASS=suzuki0901
+MYSQL57_WP_PASS=suzuki0901
+MYSQL56_WP_PASS=suzuki0901
 BASIC_PASS=xgKrcUG9iefRQ
 DIGEST_PASS=9dd2a825562f7e0b1af6f1ec1ff97c3c
-WP_USER_COM_PASS=resuraku0901
-WP_USER_NET_PASS=resuraku0901
+WP_USER_COM_PASS=suzuki0901
+WP_USER_NET_PASS=suzuki0901
 
 パスワード用のファイルを作成
 MYSQL57_ROOT_PASS=~~~~~

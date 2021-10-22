@@ -339,7 +339,7 @@ Percentage of the requests served within a certain time (ms)
 192.168.56.3 - - [07/Oct/2021:13:53:54 +0900] "GET /wordpress/wp-admin/ HTTP/1.0" 401 381
 
 #-A にてベーシック認証を行う
-[suzuki@suzuki-t wordpress]$ /usr/local/httpd/httpd-2.4.48/bin/ab -n 100 -c 100 -A suzuki:resuraku0901 -P suzuki:resuraku0901 https://suzuki-t.com/wordpress/wp-admin/
+[suzuki@suzuki-t wordpress]$ /usr/local/httpd/httpd-2.4.48/bin/ab -n 100 -c 100 -A suzuki:suzuki0901 -P suzuki:suzuki0901 https://suzuki-t.com/wordpress/wp-admin/
 This is ApacheBench, Version 2.3 <$Revision: 1879490 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
