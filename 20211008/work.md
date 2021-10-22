@@ -35,24 +35,24 @@ wp_posts.post_type=post
 post_type=revisionはある投稿の更新内容を入れている
 guidカラムが各URLになっている
 
-/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select guid from wpdb.wp_posts where post_type='post';" -presuraku0901 | tail -n +2 > url_list.txt
+/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select guid from wpdb.wp_posts where post_type='post';" -psuzuki0901 | tail -n +2 > url_list.txt
 
 ### ユーザーURL
 wp_usersテーブルのIDカラム
 
-/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select ID from wpdb.wp_users;" -presuraku0901 | tail -n +2 | awk '{print "https://suzuki-t.com/wordpress/?author=",$1}' | sed 's% %%' >> url_list.txt
+/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select ID from wpdb.wp_users;" -psuzuki0901 | tail -n +2 | awk '{print "https://suzuki-t.com/wordpress/?author=",$1}' | sed 's% %%' >> url_list.txt
 
 ### タグのURL
 wp_term_taxonomyテーブルのtaxonomy='post_tag'で絞り込んだ列とwpdb.wp_termsテーブルの一致した列のname
 term_idでjoin
 
 
-/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select t2.name from wpdb.wp_term_taxonomy as t1 inner join wpdb.wp_terms as t2 on t1.term_id = t2.term_id AND t1.taxonomy='post_tag';" -presuraku0901  | tail -n +2 | awk '{print "https://suzuki-t.com/wordpress/?tag=",$1}' | sed 's% %%' >> url_list.txt
+/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select t2.name from wpdb.wp_term_taxonomy as t1 inner join wpdb.wp_terms as t2 on t1.term_id = t2.term_id AND t1.taxonomy='post_tag';" -psuzuki0901  | tail -n +2 | awk '{print "https://suzuki-t.com/wordpress/?tag=",$1}' | sed 's% %%' >> url_list.txt
 
 ### カテゴリーのURL
 wp_term_taxonomyテーブルのtaxonomy='category'で絞り込んだ列のterm_id
 
-/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select term_id from wpdb.wp_term_taxonomy where taxonomy='category';" -presuraku0901  | tail -n +2 | awk '{print "https://suzuki-t.com/wordpress/?cat=",$1}' | sed 's% %%' >> url_list.txt
+/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select term_id from wpdb.wp_term_taxonomy where taxonomy='category';" -psuzuki0901  | tail -n +2 | awk '{print "https://suzuki-t.com/wordpress/?cat=",$1}' | sed 's% %%' >> url_list.txt
 
 ### urlリスト　一部
 https://suzuki-t.com/wordpress/?p=992

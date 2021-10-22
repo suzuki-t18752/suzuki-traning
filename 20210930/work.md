@@ -112,7 +112,7 @@ pid-file=/var/run/mariadb/mariadb.pid
 !includedir /etc/my.cnf.d
 
 0 mysql5.7 on\n
-resuraku0901
+suzuki0901
 0 mysql5.7 root update\n
 0 mysql5.7 restart\n
 0 mysql5.7 root pass\n

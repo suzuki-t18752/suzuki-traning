@@ -720,10 +720,10 @@ sudo sed -i -e 's%skip-grant-tables%#skip-grant-tables%g' /etc/my.cnf
 [suzuki@localhost mysql]$ bin/mysql -u root -p
 
 #rootユーザーのパスワードを設定する
-mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'resuraku0901';
+mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY 'suzuki0901';
 
 #suzukiを作成する
-mysql> CREATE USER 'suzuki'@'localhost' IDENTIFIED BY 'resuraku0901';
+mysql> CREATE USER 'suzuki'@'localhost' IDENTIFIED BY 'suzuki0901';
 
 #rootユーザーを抜ける
 mysql> exit;
@@ -757,7 +757,7 @@ mysql> select user(), current_user();
 [suzuki@localhost mysql]$ bin/mysql -u root -p
 
 #mysqldが動いているサーバーにて外部アクセス可能なアカウントを作成する
-mysql> CREATE USER 'suzuki'@'192.168.56.3' IDENTIFIED BY 'resuraku0901';
+mysql> CREATE USER 'suzuki'@'192.168.56.3' IDENTIFIED BY 'suzuki0901';
 
 mysql> select user, host from mysql.user;
 +---------------+--------------+
@@ -808,10 +808,10 @@ mysql> select user, host from mysql.user;
 # 実際にmysqlに接続する
 ```
 #mysql -u ユーザー名 -pパスワード -h ホスト名
-[suzuki@localhost mysql]$ bin/mysql -u suzuki -presuraku0901 -h 192.168.56.2
+[suzuki@localhost mysql]$ bin/mysql -u suzuki -psuzuki0901 -h 192.168.56.2
 
 実行時に下記エラーが発生した為、firewallの設定を行う
-[suzuki@localhost mysql]$ bin/mysql -u suzuki -presuraku0901 -h 192.168.56.2
+[suzuki@localhost mysql]$ bin/mysql -u suzuki -psuzuki0901 -h 192.168.56.2
 mysql: [Warning] Using a password on the command line interface can be insecure.
 ERROR 2003 (HY000): Can't connect to MySQL server on '192.168.56.2' (113)
 
@@ -840,13 +840,13 @@ ERROR 2003 (HY000): Can't connect to MySQL server on '192.168.56.2' (113)
 [suzuki@localhost mysql]$ sudo iptables -nL
 
 #再度mysqlへアクセスする
-[suzuki@localhost mysql]$ bin/mysql -u suzuki -presuraku0901 -h 192.168.56.2
+[suzuki@localhost mysql]$ bin/mysql -u suzuki -psuzuki0901 -h 192.168.56.2
 ```
 
 ### 結果
 ```
 #接続結果
-[suzuki@localhost mysql]$ bin/mysql -u suzuki -presuraku0901 -h 192.168.56.2
+[suzuki@localhost mysql]$ bin/mysql -u suzuki -psuzuki0901 -h 192.168.56.2
 mysql: [Warning] Using a password on the command line interface can be insecure.
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 Your MySQL connection id is 6
