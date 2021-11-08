@@ -79,7 +79,7 @@ sub vcl_recv {
     - Varnish:handling リクエストの処理方法を示す「hit」、「miss」、「pass」、「pipe」、または「synth」文字列の1つを表示
   - %U クエリ文字列のないリクエストURL
 ```
-sudo /usr/local/varnish/bin/varnishncsa -F '%U %{Varnish:handling}x' -w /usr/local/varnish/varnishcsa.log -a -D
+sudo /usr/local/varnish/bin/varnishncsa -F '%t %U %{Varnish:handling}x' -w /usr/local/varnish/varnishcsa.log -a -D
 
 tail -f /usr/local/varnish/varnishcsa.log
 /wordpress/ hit
