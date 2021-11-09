@@ -171,7 +171,7 @@ make
 make install
 
 #apacheを起動する
-/usr/local/httpd/httpd-2.4.48/bin/apachectl start  
+/usr/local/httpd/httpd-2.4.48/bin/apachectl start
 
 
 ###################################################################################################
@@ -356,13 +356,13 @@ systemctl is-enabled mysql57
 
 #rootユーザーのパスワードを設定
 /usr/local/mysql5.7/bin/mysql -u root -p"$DB_PASSWORD" --socket=/usr/local/mysql5.7/data/mysql.sock \
--e"ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL57_ROOT_PASS';" --connect-expired-password 
+-e"ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL57_ROOT_PASS';" --connect-expired-password
 
 /usr/local/mysql5.7/bin/mysql -t -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select user, HOST from mysql.user;"
 
 #wordpress用ユーザー作成
 /usr/local/mysql5.7/bin/mysql -u root -p"$MYSQL57_ROOT_PASS" --socket=/usr/local/mysql5.7/data/mysql.sock \
--e"CREATE USER 'wordpress'@'localhost' IDENTIFIED BY '$MYSQL57_WP_PASS'" --connect-expired-password 
+-e"CREATE USER 'wordpress'@'localhost' IDENTIFIED BY '$MYSQL57_WP_PASS'" --connect-expired-password
 
 /usr/local/mysql5.7/bin/mysql -t -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select user, HOST from mysql.user;"
 
@@ -744,8 +744,8 @@ wp core install --title=suzuki_blog --admin_user=suzuki --admin_password=$WP_USE
 POST_ID="$(wp post create --post_title=test --post_content=test --porcelain  --allow-root)"
 
 #画像を添付する
-PATH=$PATH:/usr/local/bin /usr/local/bin/wp media import /root/centOSstart.png --post_id=$POST_ID \
---title=centOS --allow-root --featured_image
+#PATH=$PATH:/usr/local/bin /usr/local/bin/wp media import /root/centOSstart.png --post_id=$POST_ID \
+#--title=centOS --allow-root --featured_image
 
 #ステータスを公開に変更
 wp post update $POST_ID --post_status=publish --allow-root
@@ -764,7 +764,7 @@ diff /var/www/html/wordpress/wp-config.php /var/www/html/wordpress/wp-config-sam
 
 #wordpressサイト作成
 wp core install --title=suzuki_blog2 --admin_user=suzuki --admin_password=$WP_USER_NET_PASS \
---admin_email=suzukit@suzuki.jp --allow-root --url='https://suzuki-t.net/wordpress' 
+--admin_email=suzukit@suzuki.jp --allow-root --url='https://suzuki-t.net/wordpress'
 
 #権限の設定
 chown -R daemon:daemon /var/www/html2/wordpress
@@ -794,3 +794,347 @@ mv composer.phar /usr/local/bin/composer
 #確認 --no-interaction#rootで実行する場合質問がでないようにする(バージョンの確認だけなのでOK)
 composer -v --no-interaction
 #############################################################################################
+
+#apacheをsystemctlで管理する###########################################################################
+#環境変数ファイル作成
+#sudo touch /etc/sysconfig/httpd
+
+#systemctl用設定ファイルの作成
+touch /usr/lib/systemd/system/httpd.service
+
+patch -R /usr/lib/systemd/system/httpd.service << EOF
+1,20d0
+< [Unit]
+< Description=The Apache HTTP Server
+< After=network.target remote-fs.target nss-lookup.target
+< Documentation=man:httpd(8)
+< Documentation=man:apachectl(8)
+< [Service]
+< Type=forking
+< # EnvironmentFile=/etc/sysconfig/httpd
+< ExecStart=/usr/local/httpd/httpd-2.4.48/bin/apachectl start
+< ExecReload=/usr/local/httpd/httpd-2.4.48/bin/apachectl graceful
+< ExecStop=/usr/local/httpd/httpd-2.4.48/bin/apachectl stop
+< # We want systemd to give httpd some time to finish gracefully, but still want
+< # it to kill httpd after TimeoutStopSec if something went wrong during the
+< # graceful stop. Normally, Systemd sends SIGTERM signal right after the
+< # ExecStop, which would kill httpd. We are sending useless SIGCONT here to give
+< # httpd time to finish.
+< KillSignal=SIGCONT
+< PrivateTmp=true
+< [Install]
+< WantedBy=multi-user.target
+EOF
+
+#apache停止
+/usr/local/httpd/httpd-2.4.48/bin/apachectl stop
+
+#
+systemctl daemon-reload
+
+#apache起動
+systemctl start httpd
+
+#自動起動設定
+ln -s '/usr/lib/systemd/system/httpd.service' '/etc/systemd/system/multi-user.target.wants/httpd.service'
+
+#apache確認
+systemctl status httpd
+#############################################################################################################
+
+
+#varnish###################################################################
+cd /usr/local/src
+
+curl -OL https://varnish-cache.org/_downloads/varnish-7.0.0.tgz
+
+tar -xvf varnish-7.0.0.tgz
+
+cd varnish-7.0.0
+
+yum install -y autoconf automake jemalloc-devel libedit-devel libtool libunwind-devel ncurses-devel pcre2-devel python3-sphinx python36-docutils.noarch python3-devel
+
+./configure --prefix=/usr/local/varnish
+
+make
+
+make install
+
+ldconfig
+
+####################################
+
+#varnish用にapacheの設定
+patch /usr/local/httpd/httpd-2.4.48/conf/httpd.conf << EOF
+52c52
+< Listen 80
+---
+> Listen 8080
+117c117
+< #LoadModule proxy_module modules/mod_proxy.so
+---
+> LoadModule proxy_module modules/mod_proxy.so
+120c120
+< #LoadModule proxy_http_module modules/mod_proxy_http.so
+---
+> LoadModule proxy_http_module modules/mod_proxy_http.so
+155d154
+< LoadModule php7_module        modules/libphp7.so
+462c461
+< #Include conf/extra/httpd-mpm.conf
+---
+> Include conf/extra/httpd-mpm.conf
+EOF
+
+#virtualhostの設定
+#バックアップ
+cp /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf_`date +"%Y%m%d%I%M%S"`
+#ファイルを空に
+echo -n > /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf
+#ファイルに設定を入れる
+patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf << EOF
+0a1,63
+> # Virtual Hosts
+> #
+> # Required modules: mod_log_config
+> #
+> # If you want to maintain multiple domains/hostnames on your
+> # machine you can setup VirtualHost containers for them. Most configurations
+> # use only name-based virtual hosts so the server doesn't need to worry about
+> # IP addresses. This is indicated by the asterisks in the directives below.
+> #
+> # Please see the documentation at
+> # <URL:http://httpd.apache.org/docs/2.4/vhosts/>
+> # for further details before you try to setup virtual hosts.
+> #
+> # You may use the command line option '-S' to verify your virtual host
+> # configuration.
+> #
+> #
+> # VirtualHost example:
+> # Almost any Apache directive may go into a VirtualHost container.
+> # The first VirtualHost section is used for all requests that do not
+> # match a ServerName or ServerAlias in any <VirtualHost> block.
+> #
+> <VirtualHost 192.168.56.3:8080>
+>     SetEnvIf X-Forwarded-Proto https HTTPS=on
+>     DocumentRoot "/var/www/html"
+>     ServerName suzuki-t.com
+>     RewriteEngine on
+>     RewriteCond %{HTTPS} off
+>     RewriteRule https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+>       <Directory "/var/www/html/">
+>               Require all granted
+>               <FilesMatch \.php$>
+>                       SetHandler application/x-httpd-php
+>               </FilesMatch>
+>       </Directory>
+>       <Directory "/var/www/html/wordpress/wp-admin">
+>                 AuthType Basic
+>                 AuthName "auth"
+>                 AuthUserFile /usr/local/httpd/httpd-2.4.48/htpasswd
+>               Require valid-user
+>       </Directory>
+> </VirtualHost>
+> #
+> <VirtualHost 192.168.56.3:8080>
+>     SetEnvIf X-Forwarded-Proto https HTTPS=on
+>     DocumentRoot "/var/www/html2"
+>     ServerName suzuki-t.net
+>     RewriteEngine on
+>     RewriteCond %{HTTPS} off
+>     RewriteRule https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+>       <Directory "/var/www/html2/">
+>               Require all granted
+>               <FilesMatch \.php$>
+>                       SetHandler application/x-httpd-php
+>               </FilesMatch>
+>       </Directory>
+>       <Directory "/var/www/html2/wordpress/wp-admin">
+>              AuthType Digest
+>                AuthName "auth"
+>                 AuthUserFile /usr/local/httpd/httpd-2.4.48/htdigestpasswd
+>                 Require valid-user
+>         </Directory>
+> </VirtualHost>
+EOF
+
+
+
+#virtualhostの設定
+#バックアップ
+cp /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf_`date +"%Y%m%d%I%M%S"`
+#ファイルを空に
+echo -n > /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf
+#ファイルに設定を入れる
+patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
+0a1,85
+> Listen 443
+> #
+> SSLCipherSuite HIGH:MEDIUM:!MD5:!RC4:!3DES
+> SSLProxyCipherSuite HIGH:MEDIUM:!MD5:!RC4:!3DES
+> #
+> SSLHonorCipherOrder on
+> #
+> SSLProtocol all -SSLv3
+> SSLProxyProtocol all -SSLv3
+> #
+> SSLPassPhraseDialog  builtin
+> #
+> SSLSessionCache        "shmcb:/usr/local/httpd/httpd-2.4.48/logs/ssl_scache(512000)"
+> SSLSessionCacheTimeout  300
+> #
+> <VirtualHost 192.168.56.3:443>
+> DocumentRoot "/var/www/html"
+> ServerName suzuki-t.com
+> ServerAdmin you@example.com
+> ErrorLog "/usr/local/httpd/httpd-2.4.48/logs/error_log"
+> TransferLog "/usr/local/httpd/httpd-2.4.48/logs/access_log"
+> #
+> #
+> #<Directory "/var/www/html/">
+> #    Require all granted
+> #    <FilesMatch \.php$>
+> #        SetHandler application/x-httpd-php
+> #    </FilesMatch>
+> #</Directory>
+> #<Directory "/var/www/html/wordpress/wp-admin">
+> #    AuthType Basic
+> #    AuthName "auth"
+> #    AuthUserFile /usr/local/httpd/httpd-2.4.48/htpasswd
+> #    Require valid-user
+> #</Directory>
+> #
+> SSLEngine on
+> SSLCertificateFile "/usr/local/httpd/httpd-2.4.48/conf/server.crt"
+> SSLCertificateKeyFile "/usr/local/httpd/httpd-2.4.48/conf/server.key"
+> #
+> RequestHeader set X-Forwarded-Proto "https"
+> #
+> ProxyPass "/" "http://suzuki-t.com:80/"
+> ProxyPassReverse "/" "http://suzuki-t.com:80/"
+> #
+> <FilesMatch "\.(cgi|shtml|phtml|php)$">
+>     SSLOptions +StdEnvVars
+> </FilesMatch>
+> <Directory "/usr/local/httpd/httpd-2.4.48/cgi-bin">
+>     SSLOptions +StdEnvVars
+> </Directory>
+> #
+> BrowserMatch "MSIE [2-5]" \
+>          nokeepalive ssl-unclean-shutdown \
+>          downgrade-1.0 force-response-1.0
+> #
+> CustomLog "/usr/local/httpd/httpd-2.4.48/logs/ssl_request_log" \
+>           "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
+> </VirtualHost>
+> <VirtualHost 192.168.56.3:443>
+> DocumentRoot "/var/www/html2"
+> ServerName suzuki-t.net
+> ServerAdmin you@example.com
+> ErrorLog "/usr/local/httpd/httpd-2.4.48/logs/error_log"
+> TransferLog "/usr/local/httpd/httpd-2.4.48/logs/access_log"
+> #
+> #<Directory "/var/www/html2/">
+> #   Require all granted
+> #   <FilesMatch \.php$>
+> #      SetHandler application/x-httpd-php
+> #   </FilesMatch>
+> #</Directory>
+> #<Directory "/var/www/html2/wordpress/wp-admin">
+> #   AuthType Digest
+> #   AuthName "auth"
+> #   AuthUserFile /usr/local/httpd/httpd-2.4.48/htdigestpasswd
+> #   Require valid-user
+> #</Directory>
+> #
+> SSLEngine on
+> SSLCertificateFile "/usr/local/httpd/httpd-2.4.48/conf/server2.crt"
+> SSLCertificateKeyFile "/usr/local/httpd/httpd-2.4.48/conf/server2.key"
+> #
+> RequestHeader set X-Forwarded-Proto "https"
+> #
+> ProxyPass "/" "http://suzuki-t.net:80/"
+> ProxyPassReverse "/" "http://suzuki-t.net:80/"
+> </VirtualHost>
+EOF
+
+
+#apache再起動
+systemctl restart httpd
+
+#varnishの設定############################################################################################
+
+#設定ファイル
+touch /usr/local/varnish/default.vcl
+
+patch /usr/local/varnish/default.vcl << EOF
+0a1,14
+> vcl 4.0;
+> #
+> backend default {
+>   .host = "192.168.56.3";
+>   .port = "8080";
+> }
+> #
+> sub vcl_recv {
+>  if(req.url ~ "wp-admin|wp-login") {
+>    return (pass);
+>  }else{
+>    return (hash);
+>  }
+> }
+EOF
+
+#varnishをsystemctlで管理する設定ファイル
+touch /usr/lib/systemd/system/varnish.service
+
+patch /usr/lib/systemd/system/varnish.service << EOF
+0a1,13
+> [Unit]
+> Description=Web Application Accelerator
+> After=network.target
+> #
+> [Service]
+> Type=forking
+> PIDFile=/usr/local/varnish/varnish.pid
+> PrivateTmp=true
+> ExecStart=/usr/local/varnish/sbin/varnishd -P /usr/local/varnish/varnish.pid -f /usr/local/varnish/default.vcl -a :80 -s malloc,256M
+> ExecReload=/usr/local/varnish/bin/varnish-vcl-reload
+> #
+> [Install]
+> WantedBy=multi-user.target
+EOF
+
+#varnishncsa(ロギングプログラム)をsystemctlで管理する設定ファイル
+touch /usr/lib/systemd/system/varnishncsa.service
+
+patch /usr/lib/systemd/system/varnishncsa.service << EOF
+0a1,10
+> [Unit]
+> Description=Varnish HTTP accelerator NCSA daemon
+> After=varnish.service
+> #
+> [Service]
+> Type=forking
+> ExecStart=/usr/local/varnish/bin/varnishncsa -F '%%t %%m %%{Host}i %%U %%s %%{Varnish:handling}x' -w /usr/local/varnish/varnishncsa.log -P /usr/local/varnish/varnishncsa.pid -a -D
+> #
+> [Install]
+> WantedBy=multi-user.target
+EOF
+
+#設定ファイルの反映
+systemctl daemon-reload
+
+#varnishの起動
+systemctl start varnish.service
+
+#自動起動設定
+systemctl enable varnish.service
+
+#varnishncsaの起動
+systemctl start varnishncsa.service
+
+#自動起動設定
+systemctl enable varnishncsa.service
+#############################################################################################################################
