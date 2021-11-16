@@ -705,7 +705,7 @@ cd /usr/local/httpd/httpd-2.4.48/conf/
 sudo sh -c " openssl genrsa 2024 > server2.key"
 
 #署名要求
-sudo sh -c "openssl req -new -key server2.key -subj '/C=JP/ST=Tokyo/L=shibuya-ku/O=esraku/CN=suzuki-t.net' > server2.csr"
+sudo sh -c "openssl req -new -key server2.key -subj '/C=JP/ST=Tokyo/L=shibuya-ku/O=suzuki/CN=suzuki-t.net' > server2.csr"
 
 #証明書作成
 sh -c "openssl x509 -req -days 3650 -signkey server2.key < server2.csr > server2.crt"
@@ -829,17 +829,17 @@ EOF
 #apache停止
 /usr/local/httpd/httpd-2.4.48/bin/apachectl stop
 
-#
+#設定の読み込み
 systemctl daemon-reload
 
 #apache起動
-systemctl start httpd
+systemctl start httpd.service
 
 #自動起動設定
 ln -s '/usr/lib/systemd/system/httpd.service' '/etc/systemd/system/multi-user.target.wants/httpd.service'
 
 #apache確認
-systemctl status httpd
+systemctl status httpd.service
 #############################################################################################################
 
 
@@ -1061,7 +1061,7 @@ EOF
 
 
 #apache再起動
-systemctl restart httpd
+systemctl restart httpd.service
 
 #varnishの設定############################################################################################
 
