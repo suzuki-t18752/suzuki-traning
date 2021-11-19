@@ -17,6 +17,8 @@
 #画像の投稿を行う際は画像ファイルを置いておく
 
 #パスワード変数ファイル
+#ベーシック認証、ダイジェスト認証のパスワードは専用のツールで作成しておく
+#https://www.luft.co.jp/cgi/htpasswd.php
 # MYSQL57_ROOT_PASS=~~~~
 # MYSQL56_ROOT_PASS=~~~~
 # MYSQL57_WP_PASS=~~~~
