@@ -997,7 +997,7 @@ cp /usr/local/httpd/conf/extra/httpd-ssl.conf /usr/local/httpd/conf/extra/httpd-
 echo -n > /usr/local/httpd/conf/extra/httpd-ssl.conf
 #ファイルに設定を入れる
 patch /usr/local/httpd/conf/extra/httpd-ssl.conf << EOF
-0a1,85
+0a1,81
 > Listen 443
 > #
 > SSLCipherSuite HIGH:MEDIUM:!MD5:!RC4:!3DES
@@ -1049,13 +1049,6 @@ patch /usr/local/httpd/conf/extra/httpd-ssl.conf << EOF
 > <Directory "/usr/local/httpd/cgi-bin">
 >     SSLOptions +StdEnvVars
 > </Directory>
-> #
-> BrowserMatch "MSIE [2-5]" \
->          nokeepalive ssl-unclean-shutdown \
->          downgrade-1.0 force-response-1.0
-> #
-> CustomLog "/usr/local/httpd/logs/ssl_request_log" \
->           "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 > </VirtualHost>
 > <VirtualHost 192.168.56.3:443>
 > DocumentRoot "/var/www/html2"
