@@ -8,3 +8,5 @@
 - mysql
 - php
   - wordpress
+
+## work.shにて環境構築の自動化
