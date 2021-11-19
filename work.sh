@@ -13,7 +13,8 @@
 #virtualbox,ネットワークの設定はあらかじめ行う
 #ストレージは40G程度必要
 #root権限にて実行する
-#画像の投稿を行う為画像ファイルを置いておく
+#各ダウンロードファイルはバージョンが変わるとダウンロードできなくなる可能性があるので注意
+#画像の投稿を行う際は画像ファイルを置いておく
 
 #パスワード変数ファイル
 # MYSQL57_ROOT_PASS=~~~~
@@ -152,16 +153,16 @@ make install
 cd /usr/local/src
 
 #ファイルのダウンロードする
-curl -O --url https://dlcdn.apache.org//httpd/httpd-2.4.48.tar.gz
+curl -O --url https://dlcdn.apache.org//httpd/httpd-2.4.51.tar.gz
 
 #ファイルを解凍する
-tar xvf httpd-2.4.48.tar.gz
+tar xvf httpd-2.4.51.tar.gz
 
 #作業ディレクトリへ移動
-cd /usr/local/src/httpd-2.4.48
+cd /usr/local/src/httpd-2.4.51
 
 #Makefileを作成
-./configure --prefix=/usr/local/httpd/httpd-2.4.48 --with-apr=/usr/local/apr/apr-1.7.0 \
+./configure --prefix=/usr/local/httpd --with-apr=/usr/local/apr/apr-1.7.0 \
 --with-apr-util=/usr/local/apr-util/apr-util-1.6.1 --enable-ssl --with-mpm=prefork
 
 #Makefikeを元にmake installに必要なファイルをコンパイル
@@ -171,7 +172,7 @@ make
 make install
 
 #apacheを起動する
-/usr/local/httpd/httpd-2.4.48/bin/apachectl start
+/usr/local/httpd/bin/apachectl start
 
 
 ###################################################################################################
@@ -189,10 +190,10 @@ tar xvf php-7.4.23.tar.gz
 cd php-7.4.23
 
 #perlのインストール先を設定
-sed -i -e 's%#!/replace/with/path/to/perl/interpreter -w%#!/usr/bin/perl -w%g' /usr/local/httpd/httpd-2.4.48/bin/apxs
+sed -i -e 's%#!/replace/with/path/to/perl/interpreter -w%#!/usr/bin/perl -w%g' /usr/local/httpd/bin/apxs
 
 #Makefileの作成
-./configure --with-apxs2=/usr/local/httpd/httpd-2.4.48/bin/apxs --with-pdo-mysql --with-mysqli \
+./configure --with-apxs2=/usr/local/httpd/bin/apxs --with-pdo-mysql --with-mysqli \
 --with-curl --enable-exif --enable-mbstring --with-openssl --with-sodium \
 --enable-bcmath --enable-gd --enable-intl --enable-ftp --enable-sockets --with-zlib
 
@@ -276,11 +277,6 @@ groupadd mysql
 #mysql用ユーザーの作成
 useradd -m mysql -g mysql
 
-#ログ用のディレクトリとファイルを作成し、mysqlユーザーに権限を与える
-mkdir /var/log/mariadb
-
-chown -R mysql:mysql /var/log/mariadb
-
 #ソースコードを置くディレクトリへ
 cd /usr/local/src
 
@@ -306,35 +302,54 @@ make install
 #作業ディレクトリへ
 cd /usr/local/mysql5.7
 
+mkdir /usr/local/mysql5.7/log
+chown -R mysql:mysql /usr/local/mysql5.7/log
+
+cp /etc/my.cnf /etc/my.cnf.bak`date +"%Y%m%d%I%M%S"`
+
 cp /etc/my.cnf /usr/local/mysql5.7/my.cnf
 
 #my.cnfを変更
-patch -R /usr/local/mysql5.7/my.cnf << EOF
-2,6c2,3
-< datadir=/usr/local/mysql5.7/data
-< socket=/usr/local/mysql5.7/data/mysql.sock
-< port=3306
-< character-set-server=utf8mb4
-< collation-server=utf8_general_ci
----
-> datadir=/var/lib/mysql
-> socket=/var/lib/mysql/mysql.sock
+cat << EOF > /usr/local/mysql5.7/my.cnf
+[mysqld]
+datadir=/usr/local/mysql5.7/data
+socket=/usr/local/mysql5.7/data/mysql.sock
+port=3306
+character-set-server=utf8
+collation-server=utf8_general_ci
+symbolic-links=0
+
+#バイナリログ
+log_bin=/usr/local/mysql5.7/log/bin.log
+expire_logs_days=7
+server-id=1
+#クエリログ
+general_log=1
+general_log_file=/usr/local/mysql5.7/log/sql.log
+log_output=FILE
+
+[mysqld_safe]
+log-error=/usr/local/mysql5.7/log/error.log
+pid-file=/usr/local/mysql5.7/mysql.pid
+
+!includedir /etc/my.cnf.d
 EOF
 
-#記録
 diff /etc/my.cnf /usr/local/mysql5.7/my.cnf
+
 
 #my.cnfを指定
 sed -i -e 's%conf=/etc/my.cnf%conf=/usr/local/mysql5.7/my.cnf%g' /usr/local/mysql5.7/support-files/mysql.server
 
 #データディレクトリを初期化
-/usr/local/mysql5.7/bin/mysqld --initialize --user=mysql --datadir=/usr/local/mysql5.7/data 2>&1 | tee -a /var/log/mariadb/mariadb.log
+/usr/local/mysql5.7/bin/mysqld --initialize --user=mysql --datadir=/usr/local/mysql5.7/data 2>&1 | tee -a /usr/local/mysql5.7/log/error.log
 
 #データディレクトリ初期化後のroot初期化パスワードを取得
-DB_PASSWORD=$(grep "A temporary password is generated" /var/log/mariadb/mariadb.log | sed -s 's/.*root@localhost: //')
+DB_PASSWORD=$(grep "A temporary password is generated" /usr/local/mysql5.7/log/error.log | sed -s 's/.*root@localhost: //')
 
 #データディレクトリのパーミッションを変更
 chmod 755 /usr/local/mysql5.7/data
+chown -R mysql:mysql /usr/local/mysql5.7/log
 
 #systemctlで実行できるようプロセス起動用ファイルをinit.dへコピー
 cp /usr/local/mysql5.7/support-files/mysql.server /etc/init.d/mysql57
@@ -358,28 +373,35 @@ systemctl is-enabled mysql57
 /usr/local/mysql5.7/bin/mysql -u root -p"$DB_PASSWORD" --socket=/usr/local/mysql5.7/data/mysql.sock \
 -e"ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL57_ROOT_PASS';" --connect-expired-password
 
-/usr/local/mysql5.7/bin/mysql -t -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select user, HOST from mysql.user;"
+/usr/local/mysql5.7/bin/mysql -t -u root -p"$MYSQL57_ROOT_PASS" \
+--socket=/usr/local/mysql5.7/data/mysql.sock -e"select user, HOST from mysql.user;"
 
 #wordpress用ユーザー作成
 /usr/local/mysql5.7/bin/mysql -u root -p"$MYSQL57_ROOT_PASS" --socket=/usr/local/mysql5.7/data/mysql.sock \
 -e"CREATE USER 'wordpress'@'localhost' IDENTIFIED BY '$MYSQL57_WP_PASS'" --connect-expired-password
 
-/usr/local/mysql5.7/bin/mysql -t -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"select user, HOST from mysql.user;"
+/usr/local/mysql5.7/bin/mysql -t -u root -p"$MYSQL57_ROOT_PASS" \
+--socket=/usr/local/mysql5.7/data/mysql.sock -e"select user, HOST from mysql.user;"
 
-/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"show databases;"
+/usr/local/mysql5.7/bin/mysql -u root -p"$MYSQL57_ROOT_PASS" \
+--socket=/usr/local/mysql5.7/data/mysql.sock -e"show databases;"
 
 #wordpress用データベース作成
-/usr/local/mysql5.7/bin/mysql -u root -p"$MYSQL57_ROOT_PASS" --socket=/usr/local/mysql5.7/data/mysql.sock -e"CREATE DATABASE wpdb;"
+/usr/local/mysql5.7/bin/mysql -u root -p"$MYSQL57_ROOT_PASS" \
+--socket=/usr/local/mysql5.7/data/mysql.sock -e"CREATE DATABASE wpdb;"
 
-/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"show databases;"
+/usr/local/mysql5.7/bin/mysql -u root -p"$MYSQL57_ROOT_PASS" \
+--socket=/usr/local/mysql5.7/data/mysql.sock -e"show databases;"
 
-/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"show grants for 'wordpress'@'localhost'"
+/usr/local/mysql5.7/bin/mysql -u root -p"$MYSQL57_ROOT_PASS" \
+--socket=/usr/local/mysql5.7/data/mysql.sock -e"show grants for 'wordpress'@'localhost'"
 
 #wordpress用ユーザーにwordpress用データベースの権限を付与
 /usr/local/mysql5.7/bin/mysql -u root -p"$MYSQL57_ROOT_PASS" --socket=/usr/local/mysql5.7/data/mysql.sock \
 -e"GRANT ALL ON wpdb.* TO wordpress@localhost;"
 
-/usr/local/mysql5.7/bin/mysql -u root --socket=/usr/local/mysql5.7/data/mysql.sock -e"show grants for 'wordpress'@'localhost'"
+/usr/local/mysql5.7/bin/mysql -u root -p"$MYSQL57_ROOT_PASS" \
+--socket=/usr/local/mysql5.7/data/mysql.sock -e"show grants for 'wordpress'@'localhost'"
 
 ######################################################################################################################################
 
@@ -387,10 +409,10 @@ systemctl is-enabled mysql57
 
 
 #httpd.confバックアップ
-cp /usr/local/httpd/httpd-2.4.48/conf/httpd.conf /usr/local/httpd/httpd-2.4.48/conf/httpd.conf.org
+cp /usr/local/httpd/conf/httpd.conf /usr/local/httpd/conf/httpd.conf.org
 
 #httpd.confの設定
-patch -R /usr/local/httpd/httpd-2.4.48/conf/httpd.conf << EOF
+patch -R /usr/local/httpd/conf/httpd.conf << EOF
 82c82
 < LoadModule auth_digest_module modules/mod_auth_digest.so
 ---
@@ -426,14 +448,14 @@ patch -R /usr/local/httpd/httpd-2.4.48/conf/httpd.conf << EOF
 > #Include conf/extra/httpd-ssl.conf
 EOF
 
-diff /usr/local/httpd/httpd-2.4.48/conf/httpd.conf /usr/local/httpd/httpd-2.4.48/conf/httpd.conf.org
+diff /usr/local/httpd/conf/httpd.conf /usr/local/httpd/conf/httpd.conf.org
 
 
 #vhostsバックアップ
-cp /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf.org
+cp /usr/local/httpd/conf/extra/httpd-vhosts.conf /usr/local/httpd/conf/extra/httpd-vhosts.conf.org
 
 #vhosts設定
-patch -R /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf << EOF
+patch -R /usr/local/httpd/conf/extra/httpd-vhosts.conf << EOF
 23,40c23,29
 < <VirtualHost 192.168.56.3:80>
 <     DocumentRoot "/var/www/html"
@@ -450,13 +472,13 @@ patch -R /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf << EOF
 <       <Directory "/var/www/html/wordpress/wp-admin">
 <                 AuthType Basic
 <                 AuthName "auth"
-<                 AuthUserFile /usr/local/httpd/httpd-2.4.48/htpasswd
+<                 AuthUserFile /usr/local/httpd/htpasswd
 <               Require valid-user
 <       </Directory>
 ---
 > <VirtualHost *:80>
 >     ServerAdmin webmaster@dummy-host.example.com
->     DocumentRoot "/usr/local/httpd/httpd-2.4.48/docs/dummy-host.example.com"
+>     DocumentRoot "/usr/local/httpd/docs/dummy-host.example.com"
 >     ServerName dummy-host.example.com
 >     ServerAlias www.dummy-host.example.com
 >     ErrorLog "logs/dummy-host.example.com-error_log"
@@ -477,26 +499,26 @@ patch -R /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf << EOF
 <       <Directory "/var/www/html2/wordpress/wp-admin">
 <              AuthType Digest
 <                AuthName "auth"
-<                 AuthUserFile /usr/local/httpd/httpd-2.4.48/htdigestpasswd
+<                 AuthUserFile /usr/local/httpd/htdigestpasswd
 <                 Require valid-user
 <         </Directory>
 ---
 > <VirtualHost *:80>
 >     ServerAdmin webmaster@dummy-host2.example.com
->     DocumentRoot "/usr/local/httpd/httpd-2.4.48/docs/dummy-host2.example.com"
+>     DocumentRoot "/usr/local/httpd/docs/dummy-host2.example.com"
 >     ServerName dummy-host2.example.com
 >     ErrorLog "logs/dummy-host2.example.com-error_log"
 >     CustomLog "logs/dummy-host2.example.com-access_log" common
 EOF
 
-diff /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf.org
+diff /usr/local/httpd/conf/extra/httpd-vhosts.conf /usr/local/httpd/conf/extra/httpd-vhosts.conf.org
 
 
 #ベーシック認証の設定
-sh -c "echo 'suzuki:$BASIC_PASS' >>  /usr/local/httpd/httpd-2.4.48/htpasswd"
+sh -c "echo 'suzuki:$BASIC_PASS' >>  /usr/local/httpd/htpasswd"
 
 #ssl化
-cd /usr/local/httpd/httpd-2.4.48/conf/
+cd /usr/local/httpd/conf/
 
 #認証キー作成
 sh -c " openssl genrsa 2024 > server.key"
@@ -507,14 +529,10 @@ sh -c "openssl req -new -key server.key -subj '/C=JP/ST=Tokyo/L=shibuya-ku/O=suz
 #
 sh -c "openssl x509 -req -days 3650 -signkey server.key < server.csr > server.crt"
 
-/usr/local/httpd/httpd-2.4.48/bin/apachectl graceful
-
-
 
 #wordpressのインストール##########################################################################################################
 #ディレクトリの作成
-mkdir /var/www
-mkdir /var/www/html
+mkdir -p /var/www/html
 
 cd /var/www/html
 
@@ -528,10 +546,10 @@ tar xvf latest-ja.tar.gz -C /var/www/html
 chown -R daemon:daemon wordpress
 
 #ssl設定ファイルのバックアップ
-cp /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf.org
+cp /usr/local/httpd/conf/extra/httpd-ssl.conf /usr/local/httpd/conf/extra/httpd-ssl.conf.org
 
 #ssl設定
-patch -R /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
+patch -R /usr/local/httpd/conf/extra/httpd-ssl.conf << EOF
 121c121
 < <VirtualHost 192.168.56.3:443>
 ---
@@ -540,7 +558,7 @@ patch -R /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
 < DocumentRoot "/var/www/html"
 < ServerName suzuki-t.com
 ---
-> DocumentRoot "/usr/local/httpd/httpd-2.4.48/htdocs"
+> DocumentRoot "/usr/local/httpd/htdocs"
 > ServerName www.example.com:443
 129,140d128
 < <Directory "/var/www/html/">
@@ -552,7 +570,7 @@ patch -R /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
 < <Directory "/var/www/html/wordpress/wp-admin">
 <     AuthType Basic
 <     AuthName "auth"
-<     AuthUserFile /usr/local/httpd/httpd-2.4.48/htpasswd
+<     AuthUserFile /usr/local/httpd/htpasswd
 <     Require valid-user
 < </Directory>
 302,323d289
@@ -561,8 +579,8 @@ patch -R /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
 <       DocumentRoot "/var/www/html2"
 <       ServerName suzuki-t.net
 <       ServerAdmin you@example.com
-<       ErrorLog "/usr/local/httpd/httpd-2.4.48/logs/error_log"
-<       TransferLog "/usr/local/httpd/httpd-2.4.48/logs/access_log"
+<       ErrorLog "/usr/local/httpd/logs/error_log"
+<       TransferLog "/usr/local/httpd/logs/access_log"
 <       <Directory "/var/www/html2/">
 <               Require all granted
 <               <FilesMatch \.php$>
@@ -572,16 +590,16 @@ patch -R /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
 <       <Directory "/var/www/html2/wordpress/wp-admin">
 <               AuthType Digest
 <               AuthName "auth"
-<               AuthUserFile /usr/local/httpd/httpd-2.4.48/htdigestpasswd
+<               AuthUserFile /usr/local/httpd/htdigestpasswd
 <               Require valid-user
 <       </Directory>
 <       SSLEngine on
-<       SSLCertificateFile "/usr/local/httpd/httpd-2.4.48/conf/server2.crt"
-<       SSLCertificateKeyFile "/usr/local/httpd/httpd-2.4.48/conf/server2.key"
+<       SSLCertificateFile "/usr/local/httpd/conf/server2.crt"
+<       SSLCertificateKeyFile "/usr/local/httpd/conf/server2.key"
 EOF
 
 
-diff /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf.org
+diff /usr/local/httpd/conf/extra/httpd-ssl.conf /usr/local/httpd/conf/extra/httpd-ssl.conf.org
 
 ################################################################################################################################
 
@@ -616,27 +634,37 @@ scripts/mysql_install_db --user=mysql --basedir=/usr/local/mysql5.6 --datadir=/u
 #データディレクトリの権限を変更
 chmod 755 /usr/local/mysql5.6/data
 
-cp /usr/local/mysql5.6/my.cnf /usr/local/mysql5.6/my.cnf.bak
+mkdir /usr/local/mysql5.6/log
+touch /usr/local/mysql5.6/log/error.log
+chown -R mysql:mysql /usr/local/mysql5.6/log
+
+cp /usr/local/mysql5.6/my.cnf /usr/local/mysql5.6/my.cnf.bak_`date +"%Y%m%d%I%M%S"`
 
 #my.cnfを変更
-patch -R /usr/local/mysql5.6/my.cnf << EOF
-15,19c15,17
-< basedir = /usr/local/mysql5.6
-< datadir = /usr/local/mysql5.6/data
-< port = 3307
-< character-set-server=utf8mb4
-< collation-server=utf8_general_ci
----
-> # basedir = .....
-> # datadir = .....
-> # port = .....
-21c19
-< socket = /usr/local/mysql5.6/data/mysql.sock
----
-> # socket = .....
-EOF
+cat << EOF > /usr/local/mysql5.6/my.cnf
+[mysqld]
+datadir=/usr/local/mysql5.6/data
+socket=/usr/local/mysql5.6/data/mysql.sock
+port=3307
+character-set-server=utf8
+collation-server=utf8_general_ci
+symbolic-links=0
 
-diff /usr/local/mysql5.6/my.cnf /usr/local/mysql5.6/my.cnf.bak
+#バイナリログ
+log_bin=/usr/local/mysql5.6/log/bin.log
+expire_logs_days=7
+server-id=1
+#クエリログ
+general_log=1
+general_log_file=/usr/local/mysql5.6/log/sql.log
+log_output=FILE
+
+[mysqld_safe]
+log-error=/usr/local/mysql5.6/log/error.log
+pid-file=/usr/local/mysql5.6/mysql.pid
+
+!includedir /etc/my.cnf.d
+EOF
 
 
 #systemctlで実行できるようプロセス起動用ファイルをinit.dへコピー
@@ -654,6 +682,8 @@ systemctl status mysql56
 systemctl enable mysql56
 
 systemctl is-enabled mysql56
+
+
 
 /usr/local/mysql5.6/bin/mysql -t -u root --socket=/usr/local/mysql5.6/data/mysql.sock -e"select user, HOST from mysql.user;"
 
@@ -682,8 +712,7 @@ systemctl is-enabled mysql56
 
 #wordpressのインストール
 #ディレクトリの作成
-mkdir /var/www
-mkdir /var/www/html2
+mkdir -p /var/www/html2
 
 cd /var/www/html2
 
@@ -697,9 +726,9 @@ tar xvf latest-ja.tar.gz -C /var/www/html2
 chown -R daemon:daemon wordpress
 
 #ダイジェスト認証の設定
-sh -c "echo 'suzuki:auth:$DIGEST_PASS' >>  /usr/local/httpd/httpd-2.4.48/htdigestpasswd"
+sh -c "echo 'suzuki:auth:$DIGEST_PASS' >>  /usr/local/httpd/htdigestpasswd"
 
-cd /usr/local/httpd/httpd-2.4.48/conf/
+cd /usr/local/httpd/conf/
 
 #ssl認証キーの作成
 sudo sh -c " openssl genrsa 2024 > server2.key"
@@ -770,7 +799,7 @@ wp core install --title=suzuki_blog2 --admin_user=suzuki --admin_password=$WP_US
 chown -R daemon:daemon /var/www/html2/wordpress
 
 #apache再起動
-/usr/local/httpd/httpd-2.4.48/bin/apachectl graceful 2>&1
+/usr/local/httpd/bin/apachectl graceful 2>&1
 ##################################################################################################################################
 
 
@@ -812,9 +841,9 @@ patch -R /usr/lib/systemd/system/httpd.service << EOF
 < [Service]
 < Type=forking
 < # EnvironmentFile=/etc/sysconfig/httpd
-< ExecStart=/usr/local/httpd/httpd-2.4.48/bin/apachectl start
-< ExecReload=/usr/local/httpd/httpd-2.4.48/bin/apachectl graceful
-< ExecStop=/usr/local/httpd/httpd-2.4.48/bin/apachectl stop
+< ExecStart=/usr/local/httpd/bin/apachectl start
+< ExecReload=/usr/local/httpd/bin/apachectl graceful
+< ExecStop=/usr/local/httpd/bin/apachectl stop
 < # We want systemd to give httpd some time to finish gracefully, but still want
 < # it to kill httpd after TimeoutStopSec if something went wrong during the
 < # graceful stop. Normally, Systemd sends SIGTERM signal right after the
@@ -827,7 +856,7 @@ patch -R /usr/lib/systemd/system/httpd.service << EOF
 EOF
 
 #apache停止
-/usr/local/httpd/httpd-2.4.48/bin/apachectl stop
+/usr/local/httpd/bin/apachectl stop
 
 #設定の読み込み
 systemctl daemon-reload
@@ -865,7 +894,7 @@ ldconfig
 ####################################
 
 #varnish用にapacheの設定
-patch /usr/local/httpd/httpd-2.4.48/conf/httpd.conf << EOF
+patch /usr/local/httpd/conf/httpd.conf << EOF
 52c52
 < Listen 80
 ---
@@ -888,11 +917,11 @@ EOF
 
 #virtualhostの設定
 #バックアップ
-cp /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf_`date +"%Y%m%d%I%M%S"`
+cp /usr/local/httpd/conf/extra/httpd-vhosts.conf /usr/local/httpd/conf/extra/httpd-vhosts.conf_`date +"%Y%m%d%I%M%S"`
 #ファイルを空に
-echo -n > /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf
+echo -n > /usr/local/httpd/conf/extra/httpd-vhosts.conf
 #ファイルに設定を入れる
-patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf << EOF
+patch /usr/local/httpd/conf/extra/httpd-vhosts.conf << EOF
 0a1,63
 > # Virtual Hosts
 > #
@@ -932,7 +961,7 @@ patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf << EOF
 >       <Directory "/var/www/html/wordpress/wp-admin">
 >                 AuthType Basic
 >                 AuthName "auth"
->                 AuthUserFile /usr/local/httpd/httpd-2.4.48/htpasswd
+>                 AuthUserFile /usr/local/httpd/htpasswd
 >               Require valid-user
 >       </Directory>
 > </VirtualHost>
@@ -953,7 +982,7 @@ patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf << EOF
 >       <Directory "/var/www/html2/wordpress/wp-admin">
 >              AuthType Digest
 >                AuthName "auth"
->                 AuthUserFile /usr/local/httpd/httpd-2.4.48/htdigestpasswd
+>                 AuthUserFile /usr/local/httpd/htdigestpasswd
 >                 Require valid-user
 >         </Directory>
 > </VirtualHost>
@@ -963,12 +992,12 @@ EOF
 
 #virtualhostの設定
 #バックアップ
-cp /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf_`date +"%Y%m%d%I%M%S"`
+cp /usr/local/httpd/conf/extra/httpd-ssl.conf /usr/local/httpd/conf/extra/httpd-ssl.conf_`date +"%Y%m%d%I%M%S"`
 #ファイルを空に
-echo -n > /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf
+echo -n > /usr/local/httpd/conf/extra/httpd-ssl.conf
 #ファイルに設定を入れる
-patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
-0a1,85
+patch /usr/local/httpd/conf/extra/httpd-ssl.conf << EOF
+0a1,81
 > Listen 443
 > #
 > SSLCipherSuite HIGH:MEDIUM:!MD5:!RC4:!3DES
@@ -981,15 +1010,15 @@ patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
 > #
 > SSLPassPhraseDialog  builtin
 > #
-> SSLSessionCache        "shmcb:/usr/local/httpd/httpd-2.4.48/logs/ssl_scache(512000)"
+> SSLSessionCache        "shmcb:/usr/local/httpd/logs/ssl_scache(512000)"
 > SSLSessionCacheTimeout  300
 > #
 > <VirtualHost 192.168.56.3:443>
 > DocumentRoot "/var/www/html"
 > ServerName suzuki-t.com
 > ServerAdmin you@example.com
-> ErrorLog "/usr/local/httpd/httpd-2.4.48/logs/error_log"
-> TransferLog "/usr/local/httpd/httpd-2.4.48/logs/access_log"
+> ErrorLog "/usr/local/httpd/logs/error_log"
+> TransferLog "/usr/local/httpd/logs/access_log"
 > #
 > #
 > #<Directory "/var/www/html/">
@@ -1001,13 +1030,13 @@ patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
 > #<Directory "/var/www/html/wordpress/wp-admin">
 > #    AuthType Basic
 > #    AuthName "auth"
-> #    AuthUserFile /usr/local/httpd/httpd-2.4.48/htpasswd
+> #    AuthUserFile /usr/local/httpd/htpasswd
 > #    Require valid-user
 > #</Directory>
 > #
 > SSLEngine on
-> SSLCertificateFile "/usr/local/httpd/httpd-2.4.48/conf/server.crt"
-> SSLCertificateKeyFile "/usr/local/httpd/httpd-2.4.48/conf/server.key"
+> SSLCertificateFile "/usr/local/httpd/conf/server.crt"
+> SSLCertificateKeyFile "/usr/local/httpd/conf/server.key"
 > #
 > RequestHeader set X-Forwarded-Proto "https"
 > #
@@ -1017,23 +1046,16 @@ patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
 > <FilesMatch "\.(cgi|shtml|phtml|php)$">
 >     SSLOptions +StdEnvVars
 > </FilesMatch>
-> <Directory "/usr/local/httpd/httpd-2.4.48/cgi-bin">
+> <Directory "/usr/local/httpd/cgi-bin">
 >     SSLOptions +StdEnvVars
 > </Directory>
-> #
-> BrowserMatch "MSIE [2-5]" \
->          nokeepalive ssl-unclean-shutdown \
->          downgrade-1.0 force-response-1.0
-> #
-> CustomLog "/usr/local/httpd/httpd-2.4.48/logs/ssl_request_log" \
->           "%t %h %{SSL_PROTOCOL}x %{SSL_CIPHER}x \"%r\" %b"
 > </VirtualHost>
 > <VirtualHost 192.168.56.3:443>
 > DocumentRoot "/var/www/html2"
 > ServerName suzuki-t.net
 > ServerAdmin you@example.com
-> ErrorLog "/usr/local/httpd/httpd-2.4.48/logs/error_log"
-> TransferLog "/usr/local/httpd/httpd-2.4.48/logs/access_log"
+> ErrorLog "/usr/local/httpd/logs/error_log"
+> TransferLog "/usr/local/httpd/logs/access_log"
 > #
 > #<Directory "/var/www/html2/">
 > #   Require all granted
@@ -1044,13 +1066,13 @@ patch /usr/local/httpd/httpd-2.4.48/conf/extra/httpd-ssl.conf << EOF
 > #<Directory "/var/www/html2/wordpress/wp-admin">
 > #   AuthType Digest
 > #   AuthName "auth"
-> #   AuthUserFile /usr/local/httpd/httpd-2.4.48/htdigestpasswd
+> #   AuthUserFile /usr/local/httpd/htdigestpasswd
 > #   Require valid-user
 > #</Directory>
 > #
 > SSLEngine on
-> SSLCertificateFile "/usr/local/httpd/httpd-2.4.48/conf/server2.crt"
-> SSLCertificateKeyFile "/usr/local/httpd/httpd-2.4.48/conf/server2.key"
+> SSLCertificateFile "/usr/local/httpd/conf/server2.crt"
+> SSLCertificateKeyFile "/usr/local/httpd/conf/server2.key"
 > #
 > RequestHeader set X-Forwarded-Proto "https"
 > #
