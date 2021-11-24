@@ -8,5 +8,8 @@
 - mysql
 - php
   - wordpress
+- varnish
 
-## work.shにて環境構築の自動化
+## シェルスクリプトにて環境構築の自動化
+
+##
