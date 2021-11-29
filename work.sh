@@ -90,6 +90,7 @@ iptables -I INPUT 5 -p tcp --dport 80 -j ACCEPT
 iptables -I INPUT 5 -p tcp --dport 443 -j ACCEPT
 iptables -I INPUT 5 -p tcp --dport 3306 -j ACCEPT
 iptables -I INPUT 5 -p tcp --dport 3307 -j ACCEPT
+iptables -I INPUT 5 -p tcp --dport 8080 -j ACCEPT
 
 #記録
 iptables -nL
