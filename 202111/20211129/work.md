@@ -63,9 +63,3 @@ Max kernel policy version:      31
 # 上記コマンドにて
 ```
 [SElinuxの設定](https://blog.fenrir-inc.com/jp/2016/09/selinux.html)
-## [SElinux](SELinuxを利用すると細かいアクセス制御が可能になる。例えば、サービス毎に最小限の権限を与え管理することなどが可能になる)
-- SELinuxを利用すると細かいアクセス制御が可能になる。例えば、サービス毎に最小限の権限を与え管理することなどが可能になる
-- 設定の確認 sestatusコマンド
-  - enforcing SELinux有効でありアクセス制御が有効となる
-  - permissive アクセス制御は無効だが警告メッセージを表示する
-  - disabled SELinux無効
