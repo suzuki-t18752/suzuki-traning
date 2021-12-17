@@ -9,7 +9,7 @@
     - ブラウザによっては、noopenerがサポートされていないため、noopenerと合わせてnoreffererを指定するのが好ましい、noreffererを指定することで、リンク先にリンク元のリンク情報が送られないようになるため、 noopenerと同じくリンク先からの参照ができなくなる
 ```
 #rails
-<%= link_to contact.name, admin_restaurant_path(contact.name_id), target: :_blank, rel: "noopener noreferrer" %>
+<%= link_to contact.name, admin_path(contact.name_id), target: :_blank, rel: "noopener noreferrer" %>
 #html
 <a href="ここにリンク先のURLを入れる" target="_blank" rel="noopener noreferrer">新規タブで開く</a>
 ```
@@ -98,8 +98,8 @@ notifier.ping(blocks: build_blocks(message, 1000, 'test_name'))
 
 [root@localhost ~]# useradd suzuki
 useradd: ユーザ 'suzuki' は既に存在します
-[root@localhost ~]# passwd resuraku0901
-passwd: 不明なユーザー名 'resuraku0901'。
+[root@localhost ~]# passwd suzuki0901
+passwd: 不明なユーザー名 'suzuki0901'。
 [root@localhost ~]# passwd suzuki
 ユーザー suzuki のパスワードを変更。
 新しいパスワード:
