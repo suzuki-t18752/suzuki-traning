@@ -47,8 +47,8 @@
 
 [root@localhost ~]# useradd suzuki
 useradd: ユーザ 'suzuki' は既に存在します
-[root@localhost ~]# passwd resuraku0901
-passwd: 不明なユーザー名 'resuraku0901'。
+[root@localhost ~]# passwd suzuki0901
+passwd: 不明なユーザー名 'suzuki0901'。
 [root@localhost ~]# passwd suzuki
 ユーザー suzuki のパスワードを変更。
 新しいパスワード:

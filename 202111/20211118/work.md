@@ -70,7 +70,7 @@ pid-file=/var/run/mariadb/mariadb.pid
 ```
 
 
-/usr/local/mysql5.7/bin/mysql -u root -presuraku0901 --socket=/usr/local/mysql5.7/data/mysql.sock -t -e"select * from hoge4"
+/usr/local/mysql5.7/bin/mysql -u root -psuzuki0901 --socket=/usr/local/mysql5.7/data/mysql.sock -t -e"select * from hoge4"
 
 
 ### 複数行まとめてファイルに入れる

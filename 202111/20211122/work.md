@@ -53,7 +53,7 @@ def build_blocks(message, id, name)
     ]
 end
 
-edit_url = 'https://github.com/yon-b/resraku/issues/5663'
+edit_url = 'https://test'
 msg = <<~MSG
     test____suzukit
     %<edit_url>s
