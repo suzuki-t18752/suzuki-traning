@@ -1,0 +1,11 @@
+- 数列のみ
+  - ^[0-9]+$
+
+- ruby 正規表現
+  - ^	Start of line
+  - $	End of line
+    - 改行ok
+  - \A	Start of string
+  - \z	End of string
+    - 改行ng
+- 改行が入った場合に有効か無効か変わる為基本的に\Aと\zを使うべき
