@@ -47,12 +47,12 @@
 
 - expect 結果の確認
 - let 変数の指定
-- assigns コントローラの変数を参照する
+- assigns コントローラの変数を参照する ←使わない
 
 ## rails
 ### binding rails(gem)
 - デバッグ機能
-- binding.pry　を確認したい部分に入れるとそこで処理が止まる
+- binding.pry を確認したい部分に入れるとそこで処理が止まる
  - コンソールで変数の確認等を行う
 - nextで次の処理へ進める
 - cntl + Dで終了
