@@ -269,6 +269,8 @@ from (pry):15:in `<main>'
 
 ### delegate
 - delegateの後に指定したメソッドを呼び出す際に、to:の後に指定した部分を省略することが出来る
+- selfでdelegateを呼び出すことで自身のメソッドを呼び出す際の.newや.instanceを省略出来る
+  - この状態で継承先でオーバーライドするとオーバーライドしたメソッドも同じように扱える
 ```
 [1] pry(main)> class A
 [1] pry(main)*   include Singleton
@@ -294,7 +296,6 @@ from (pry):15:in `<main>'
 "Btest"
 => "Btest"
 
-
 [1] pry(main)> class A
 [1] pry(main)*   class << self
 [1] pry(main)*     delegate :a, to: :new
@@ -304,54 +305,22 @@ from (pry):15:in `<main>'
 [1] pry(main)*   end
 [1] pry(main)* end
 => :a
-[2] pry(main)> class B < A
-   p 'Btest'
-[2] pry(main)> class B < A
-[2] pry(main)*   def a  a
-[2] pry(main)*     p 'Btest'
-[2] pry(main)*   end
-[2] pry(main)* end
-=> :a
-[3] pry(main)> A.a
+[2] pry(main)> A.a
 "test"
 => "test"
-[4] pry(main)> B.a
+[3] pry(main)> A.new.a
+"test"
+=> "test"
+[4] pry(main)> class B < A
+[4] pry(main)*   def a
+[4] pry(main)*     p 'Btest'
+[4] pry(main)*   end
+[4] pry(main)* end
+=> :a
+[5] pry(main)> B.a
 "Btest"
 => "Btest"
-
-
-[7] pry(main)> class A
-[7] pry(main)*   delegate :a, to: :new
-[7] pry(main)*   def a
-[7] pry(main)*     p 'test'
-[7] pry(main)*   end
-[7] pry(main)* end
-=> :a
-[8] pry(main)> A.a
-"test"
-=> "test"
-[9] pry(main)> A.new.a
-"test"
-=> "test"
-[10] pry(main)> class B < A
-[10] pry(main)*   def a
-[10] pry(main)*     p 'Atest'
-[10] pry(main)*   end
-[10] pry(main)*   def b
-[10] pry(main)*     p 'Btest'
-[10] pry(main)*   end
-[10] pry(main)* end
-=> :b
-[11] pry(main)> B.a
-"Atest"
-=> "Atest"
-[12] pry(main)> B.b
-NoMethodError: undefined method `b' for B:Class
-from (pry):35:in `<main>'
-[13] pry(main)> B.new.a
-"Atest"
-=> "Atest"
-[14] pry(main)> B.new.b
+[6] pry(main)> B.new.a
 "Btest"
 => "Btest"
 ```
