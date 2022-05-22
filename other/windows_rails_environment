@@ -17,7 +17,7 @@
   - Microsoft storeでWindows Terminalを検索し、入手ボタンを押下してインストールする
   - Windows Terminalの設定を開き、規定のファイルをubuntuに設定する
   
-## docker環境の構築
+## 2. docker環境の構築
 - [参考](https://sabakunotabito.hatenablog.com/entry/2021/10/03/024348)
 1. aptのバージョン確認
 ```
@@ -220,3 +220,17 @@ Share images, automate workflows, and more with a free Docker ID:
 For more examples and ideas, visit:
  https://docs.docker.com/get-started/
 ```
+- dockerサービスのコマンド一覧と停止
+```
+suzukit@agrio___orio:~$ sudo service docker help
+Usage: service docker {start|stop|restart|status}
+suzukit@agrio___orio:~$ sudo service docker stop
+ * Stopping Docker: docker
+
+## 2.5. git
+```
+suzukit@agrio___orio:~$ git --version
+git version 2.25.1
+```
+
+## 3. 
