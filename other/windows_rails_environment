@@ -234,3 +234,17 @@ git version 2.25.1
 ```
 
 ## 3. 
+```
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+cd ~/.rbenv && src/configure && make -C src
+vi ~/.bashrc
++ export PATH="$HOME/.rbenv/bin:$HOME/local/go/bin:$HOME/bin:$PATH"
++ eval "$(rbenv init -)"
+
+exec -l $SHELL
+mkdir -p "$(rbenv root)"/plugins
+git clone https://github.com/rbenv/ruby-build.git "$(rbenv root)"/plugins/ruby-build
+rbenv install 2.7.5
+rbenv local 2.7.5
+```
+gem install bundler
