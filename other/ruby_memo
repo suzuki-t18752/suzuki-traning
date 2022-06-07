@@ -117,6 +117,168 @@
     irb(main):005:0> 1.to_f
     => 1.0
     ```
+    - 値の比較
+    ```
+    irb(main):012:0> 1 > 2
+    => false
+    irb(main):013:0> 1 < 2
+    => true
+    irb(main):014:0> 1 >= 1
+    => true
+    irb(main):015:0> 1 == 1
+    => true
+    irb(main):016:0> 1 != 2
+    => true
+    ```
+    - 演算の省略
+    ```
+    irb(main):017:0> n = 1
+    irb(main):018:0* n++
+    irb(main):019:0* ^C
+    irb(main):018:0> n += 1
+    irb(main):019:0> n
+    => 2
+    irb(main):020:0> n -= 1
+    irb(main):021:0> n
+    => 1
+    irb(main):022:0> n *= 3
+    irb(main):023:0> n
+    => 3
+    irb(main):029:0> n *= 2
+    irb(main):030:0> n
+    => 6
+    irb(main):031:0> n /= 2
+    irb(main):032:0> n
+    => 3
+    nの2乗が出来ている
+      irb(main):033:0> n **= 2
+      irb(main):034:0> n
+      => 9
+    ```
+  - 数値と文字列は暗黙的に変換されない
+    ```
+    irb(main):035:0> 1 + 'test'
+    Traceback (most recent call last):
+            5: from /usr/bin/irb:23:in `<main>'
+            4: from /usr/bin/irb:23:in `load'
+            3: from /usr/lib/ruby/gems/2.7.0/gems/irb-1.2.1/exe/irb:11:in `<top (required)>'
+            2: from (irb):35
+            1: from (irb):35:in `+'
+    TypeError (String can't be coerced into Integer)
+    irb(main):036:0> 1 + 'test'.to_i
+    => 1
+    irb(main):037:0> 'test'.to_i
+    => 0
+    irb(main):038:0> 1.to_s + 'test'
+    => "1test"
+    式展開をした場合は文字列として扱われる
+      irb(main):040:0> "#{n}test"
+      => "9test"
+    ```
+  - 真偽値
+    - falseもしくはnilが偽
+      - ruby以外の言語だとnilが偽でない場合もある
+    - それ以外の値は真
+  - 論理演算子
+    - &&
+      - どちらかが偽の値だった場合その場で偽の値を返す
+      - どちらの値も真の値だった場合は最後に参照された値を返す
+        ```
+        irb(main):041:0> 1 && 1
+        => 1
+        irb(main):042:0> 1 && nil
+        => nil
+        irb(main):045:0> true && false
+        => false
+        irb(main):046:0> true && true
+        => true
+        irb(main):047:0> false && true
+        => false
+        ```
+    - ||
+      - 最初に真の値になった値を返す
+      - どちらも偽の値の場合、最後に参照された値を返す
+        ```
+        irb(main):043:0> 1 || 1
+        => 1
+        irb(main):044:0> nil || 1
+        => 1
+        irb(main):048:0> true || true
+        => true
+        irb(main):049:0> false || true
+        => true
+        irb(main):050:0> true || false
+        => true
+        irb(main):059:0> false || nil
+        => nil
+        irb(main):060:0> false || false
+        => false
+        ```
+  - カッコ()で優先度が変わる
+    ```
+    irb(main):061:0> 1 + 1 * 2
+    => 3
+    irb(main):062:0> (1 + 1) * 2
+    => 4
+    irb(main):074:0> 1 && 2 || 3 && 4
+    => 2
+    irb(main):075:0> 1 && (2 || 3) && 4
+    => 4
+    ```
+  - if文
+    ```
+    if 条件式1
+      条件式1が真の値だった場合
+    elsif 条件式2
+      条件式1が偽で条件式2が真だった場合
+    elsif 条件式3
+      条件式2が偽で条件式3が真だった場合
+    else
+      上の全ての条件式が偽だった場合
+    end
+    
+    irb(main):002:0> n = 1
+    irb(main):003:1* if n == 1
+    irb(main):004:1*   true
+    irb(main):005:1* else
+    irb(main):006:1*   false
+    irb(main):007:0> end
+    => true
+    irb(main):008:0> n = 2
+    irb(main):009:1* if n == 1
+    irb(main):010:1*   true
+    irb(main):011:1* else
+    irb(main):012:1*   false
+    irb(main):013:0> end
+    => false
+    
+    代入も出来る
+      irb(main):020:0* a =
+      irb(main):021:1* if n > 1
+      irb(main):022:1*   'でかい'
+      irb(main):023:1* else
+      irb(main):024:1*   '小さい'
+      irb(main):025:0> end
+      irb(main):026:0> a
+      => "でかい"
+    
+    ifを後ろにつけることも出来る
+      irb(main):029:0> n
+      => 3
+      irb(main):027:0> true if n > 2
+      => true
+      irb(main):028:0> true if n > 4
+      => nil
+    
+    thenを使うと1行で書ける
+      irb(main):030:1* if n == 1 then 1
+      irb(main):031:1* elsif n > 1 then true
+      irb(main):032:1* else false
+      irb(main):033:0> end
+      => true
+    ```
+  - メソッドの定義
+    
  
 
 - コマンド
