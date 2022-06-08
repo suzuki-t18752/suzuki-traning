@@ -66,6 +66,42 @@
       irb(main):009:0> 'bbbbb' + a
       => "bbbbbaaaa"
       ```
+     - %記法
+      - %q!文字列!
+        - シングルクフォートと同じ
+          ```
+          irb(main):025:0> %q!test!
+          => "test"
+          ```
+      - %Q!文字列!
+        - ダブルクフォートと同じ
+          ```
+          irb(main):026:0> a = 1
+          irb(main):027:0> %Q!test#{a}!
+          => "test1"
+          
+          Qがなくてもいける
+            irb(main):029:0> %!test#{a}!
+            => "test1"
+          
+          !の部分は適当な記号でOK
+            irb(main):030:0> %?test#{a}?
+            => "test1"
+          ```
+       
+      - ヒアドキュメント
+        - 適当な識別子を指定することで改行をして文字列を作ることが出来る
+          ```
+          irb(main):031:0" a = <<TEXT
+          irb(main):032:0" test
+          irb(main):033:0" test
+          irb(main):034:0> TEXT
+          irb(main):035:0> a
+          => "test\ntest\n"
+          ```
+
+
+
    - 数値
     ```
     基本、少数、負の数
@@ -278,6 +314,65 @@
       => true
     ```
   - メソッドの定義
+    - メソッド名も変数と同じ命名の仕方
+    ```
+    基本
+      def メソッド名(引数1, 引数2, …, …)
+        処理
+      end
+    
+    ()の引数なしでも良い
+      def メソッド名
+        処理
+      end
+    
+    irb(main):001:1* def a
+    irb(main):002:1*   1
+    irb(main):003:0> end
+    => :a
+    irb(main):004:0> a
+    => 1
+    
+    irb(main):005:1* def b(a)
+    irb(main):006:1*   1 + a
+    irb(main):007:0> end
+    => :b
+    引数が必要なのに引数がないとエラーになる
+      irb(main):008:0> b
+      Traceback (most recent call last):
+              5: from /usr/bin/irb:23:in `<main>'
+              4: from /usr/bin/irb:23:in `load'
+              3: from /usr/lib/ruby/gems/2.7.0/gems/irb-1.2.1/exe/irb:11:in `<top (required)>'
+              2: from (irb):8
+              1: from (irb):5:in `b'
+      ArgumentError (wrong number of arguments (given 0, expected 1))
+    
+    rubyは最後に呼び出された値が戻り値になる
+      irb(main):009:0> a = 2
+      irb(main):011:0> b(a)
+      => 3
+    
+    returnを付けることも出来る
+      irb(main):014:1* def c
+      irb(main):015:1*   return 1
+      irb(main):016:0> end
+      => :c
+      irb(main):017:0> c
+      => 1
+    ```
+    
+  - classメソッド
+    - クラスの確認
+      ```
+      irb(main):018:0> 1.class
+      => Integer
+      irb(main):019:0> 'test'.class
+      => String
+      irb(main):020:0> true.class
+      => TrueClass
+      irb(main):021:0> nil.class
+      => NilClass
+      ```
 
 
 
