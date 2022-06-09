@@ -118,6 +118,18 @@
             irb(main):056:0"     test
             irb(main):057:0> TEXT
             => "    test\n"
+            
+          式展開も出来る
+            irb(main):001:0> a = 1
+            irb(main):002:0" <<TEXT
+            irb(main):003:0" #{a}text
+            irb(main):004:0> TEXT
+            => "1text\n"
+          シングルクフォートを付けると式展開を無効出来る
+            irb(main):005:0' <<'TEXT'
+            irb(main):006:0' #{a}text
+            irb(main):007:0> TEXT
+            => "\#{a}text\n"
           ```
           
           
