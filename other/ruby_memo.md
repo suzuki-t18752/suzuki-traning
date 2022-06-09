@@ -98,7 +98,29 @@
           irb(main):034:0> TEXT
           irb(main):035:0> a
           => "test\ntest\n"
+          
+          -を付けると最後の識別子をインデントさせることが出来る
+            irb(main):031:0" a = <<TEXT
+            irb(main):032:0" test
+            irb(main):033:0" test
+            irb(main):034:0>    TEXT
+            irb(main):035:0> a
+            => "test\ntest\n"
+          -がないとヒアドキュメントとして認識されない
+          
+          
+          ~を付けると文字列の先頭の空白を認識してくれる
+            irb(main):052:0" <<~TEXT
+            irb(main):053:0" test
+            irb(main):054:0> TEXT
+            => "test\n"
+            irb(main):055:0" <<TEXT
+            irb(main):056:0"     test
+            irb(main):057:0> TEXT
+            => "    test\n"
           ```
+          
+          
 
 
 
