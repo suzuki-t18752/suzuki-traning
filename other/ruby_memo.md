@@ -265,6 +265,33 @@
         irb(main):024:0> 0b0001 >> 0b0010
         => 0
         ```
+      - 指数
+        ```
+        2*10の-3乗
+          irb(main):025:0> 2e-3
+          => 0.002
+        2*10の3乗
+          irb(main):026:0> 2e3
+          => 2000.0
+        ```
+      - 数値のクラス
+        ```
+        Integer 実数
+          irb(main):030:0> 1.class
+          => Integer
+        Float 小数
+          irb(main):031:0> 1.0.class
+          => Float
+        Rational 有理数
+          irb(main):034:0> 2.to_r
+          => (2/1)
+          irb(main):035:0> 2.to_r.class
+          => Rational
+          irb(main):036:0> 0.3i.class
+          => Complex
+          irb(main):037:0> '1'.to_c.class
+          => Complex
+        ```
       
     
   - 数値と文字列は暗黙的に変換されない
@@ -326,6 +353,29 @@
         irb(main):060:0> false || false
         => false
         ```
+    - 論理演算子の優先度
+      1. !
+      2. &&
+      3. ||
+      4. not
+      5. and, or
+      ```
+      irb(main):045:0> false || true
+      => true
+      irb(main):046:0> !false || true
+      => true
+      irb(main):047:0> not false || true
+      => false
+      irb(main):048:0> not false
+      => true
+      !の方が||より優先度が高い
+        irb(main):049:0> !false || true
+        => true
+      notの方が||より優先度が低い
+        irb(main):051:0> not(false || true)
+        => false
+      ```
+        
   - カッコ()で優先度が変わる
     ```
     irb(main):061:0> 1 + 1 * 2
@@ -389,6 +439,66 @@
       irb(main):033:0> end
       => true
     ```
+  - unless
+    - ifの逆で式が偽だった場合に値を返す
+      ```
+      irb(main):052:0> 1 unless false
+      => 1
+      irb(main):053:0> 1 if false
+      => nil
+      irb(main):054:1* unless false
+      irb(main):055:1*   1
+      irb(main):056:1* else
+      irb(main):057:1*   2
+      irb(main):058:0> end
+      => 1
+      irb(main):059:1* unless true
+      irb(main):060:1*   1
+      irb(main):061:1* else
+      irb(main):062:1*   2
+      irb(main):063:0> end
+      => 2
+      ```
+  - case文
+    ```
+    基本
+      case 対象の値
+      when 値1
+        対象の値が値1に一致した場合に返す値
+      when 値2
+        対象の値が値2に一致した場合に返す値
+      else
+        どれにも一致しなかった場合に返す値
+      end
+      
+    irb(main):064:1* case 1
+    irb(main):065:1* when 2
+    irb(main):066:1*   2
+    irb(main):067:1* when 1
+    irb(main):068:1*   1
+    irb(main):069:1* else
+    irb(main):070:1*   3
+    irb(main):071:0> end
+    => 1
+    irb(main):072:1* case 4
+    irb(main):073:1* when 2
+    irb(main):074:1*   2
+    irb(main):075:1* when 1
+    irb(main):076:1*   1
+    irb(main):077:1* else
+    irb(main):078:1*   3
+    irb(main):079:0> end
+    => 3
+    ```
+  - 三項演算子
+    - if文を省略して書くことが出来る
+      ```
+      irb(main):080:0> 1 ? 'test' : 'tetete'
+      => "test"
+      irb(main):081:0> false ? 'test' : 'tetete'
+      => "tetete"
+      ```
+      
   - メソッドの定義
     - メソッド名も変数と同じ命名の仕方
     ```
@@ -470,3 +580,5 @@
     - \n 改行
     - \r キャリッジリターン(改行+行の先頭に移動)
     - \t タブ
+  - 有理数
+    - 整数と分数と0のこと
