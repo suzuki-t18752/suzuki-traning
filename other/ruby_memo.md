@@ -30,6 +30,13 @@
     irb(main):107:0> e = c
     irb(main):108:0> e.object_id
     => 180
+  参照先が同じだと変更が反映される
+    irb(main):109:0> c.chop!
+    => "tes"
+    irb(main):110:0> d
+    => "test"
+    irb(main):111:0> e
+    => "tes"
   ```
 
 - 基礎文法
@@ -570,22 +577,7 @@
         irb(main):017:0> c
         => 1
       ```
-    - 真偽値を返すメソッドはメソッド名が?で終わる
-    - !で終わるメソッドは破壊的メソッドが多いので注意
-
-    - classメソッド
-      - クラスの確認
-        ```
-        irb(main):018:0> 1.class
-        => Integer
-        irb(main):019:0> 'test'.class
-        => String
-        irb(main):020:0> true.class
-        => TrueClass
-        irb(main):021:0> nil.class
-        => NilClass
-        ```
-      - 引数のデフォルト値
+    - 引数のデフォルト値
         ```
         引数に値が入っていない状態でメソッドを実行するとエラーになるが、
         デフォルト値を指定することで引数に値がなしでも実行出来る
@@ -608,6 +600,61 @@
           irb(main):090:0> a
           => 1
         ```
+    - 真偽値を返すメソッドはメソッド名が?で終わる
+    - !で終わるメソッドは破壊的メソッドが多いので注意
+
+    - classメソッド
+      - クラスの確認
+        ```
+        irb(main):018:0> 1.class
+        => Integer
+        irb(main):019:0> 'test'.class
+        => String
+        irb(main):020:0> true.class
+        => TrueClass
+        irb(main):021:0> nil.class
+        => NilClass
+        ```
+  - ライブラリ
+    - ライブラリの読み込み
+      - require ライブラリ名
+        ```
+        irb(main):116:0> require 'date'
+        => true
+        irb(main):117:0> Date.new
+        => #<Date: -4712-01-01 ((0j,0s,0n),+0s,2299161j)>
+        irb(main):119:0> Date.today
+        => #<Date: 2022-06-15 ((2459746j,0s,0n),+0s,2299161j)>
+        
+        自分で作成したrubyのファイルもrequireで読み込む
+        require ./test.rb 等
+        
+        requireは1回しか読み込まないので2回目にやるとfalseになる
+          irb(main):120:0> require 'date'
+          => false
+        ```
+      - load ライブラリ名
+        - loadはreqireと違い何度もライブラリを読み込める
+        - しかし.rbは笑楽出来ない
+        ```
+        irb(main):001:0> require 'date.rb'
+        => true
+        irb(main):002:0> require 'date.rb'
+        => false
+        irb(main):003:0> load 'date.rb'
+        => true
+        irb(main):004:0> load 'date'
+        Traceback (most recent call last):
+              5: from /usr/bin/irb:23:in `<main>'
+              4: from /usr/bin/irb:23:in `load'
+              3: from /usr/lib/ruby/gems/2.7.0/gems/irb-1.2.1/exe/irb:11:in `<top (required)>'
+              2: from (irb):4
+              1: from (irb):4:in `load'
+        LoadError (cannot load such file -- date)
+        ```
+      
+      
+  
 
 
 
