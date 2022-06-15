@@ -7,6 +7,30 @@
 - rubyのファイルを実行する
   - ruby ファイル名
 
+- rubyの変数はオブジェクトそのものではなく、オブジェクトへの参照が格納されている
+  ```
+  数値は同じオブジェクトを参照しているが、文字列は違うオブジェクトを参照しているのがわかる
+    irb(main):097:0> a = 1
+    irb(main):098:0> a.object_id
+    => 3
+    irb(main):099:0> 1.object_id
+    => 3
+    irb(main):100:0> b = 1
+    irb(main):101:0> b.object_id
+    => 3
+    irb(main):102:0> c = 'test'
+    irb(main):103:0> c.object_id
+    => 180
+    irb(main):104:0> d = 'test'
+    irb(main):105:0> d.object_id
+    => 200
+    irb(main):106:0> 'test'.object_id
+    => 220
+  変数を別の変数に入れると同じ参照先を見る
+    irb(main):107:0> e = c
+    irb(main):108:0> e.object_id
+    => 180
+  ```
 
 - 基礎文法
   - メソッドの呼び出し
@@ -501,64 +525,89 @@
       
   - メソッドの定義
     - メソッド名も変数と同じ命名の仕方
-    ```
-    基本
-      def メソッド名(引数1, 引数2, …, …)
-        処理
-      end
-    
-    ()の引数なしでも良い
-      def メソッド名
-        処理
-      end
-    
-    irb(main):001:1* def a
-    irb(main):002:1*   1
-    irb(main):003:0> end
-    => :a
-    irb(main):004:0> a
-    => 1
-    
-    irb(main):005:1* def b(a)
-    irb(main):006:1*   1 + a
-    irb(main):007:0> end
-    => :b
-    引数が必要なのに引数がないとエラーになる
-      irb(main):008:0> b
-      Traceback (most recent call last):
-              5: from /usr/bin/irb:23:in `<main>'
-              4: from /usr/bin/irb:23:in `load'
-              3: from /usr/lib/ruby/gems/2.7.0/gems/irb-1.2.1/exe/irb:11:in `<top (required)>'
-              2: from (irb):8
-              1: from (irb):5:in `b'
-      ArgumentError (wrong number of arguments (given 0, expected 1))
-    
-    rubyは最後に呼び出された値が戻り値になる
-      irb(main):009:0> a = 2
-      irb(main):011:0> b(a)
-      => 3
-    
-    returnを付けることも出来る
-      irb(main):014:1* def c
-      irb(main):015:1*   return 1
-      irb(main):016:0> end
-      => :c
-      irb(main):017:0> c
+      ```
+      基本
+        def メソッド名(引数1, 引数2, …, …)
+          処理
+        end
+
+      ()の引数なしでも良い
+        def メソッド名
+          処理
+        end
+
+      irb(main):001:1* def a
+      irb(main):002:1*   1
+      irb(main):003:0> end
+      => :a
+      irb(main):004:0> a
       => 1
-    ```
-    
-  - classメソッド
-    - クラスの確認
+
+      irb(main):005:1* def b(a)
+      irb(main):006:1*   1 + a
+      irb(main):007:0> end
+      => :b
+      引数が必要なのに引数がないとエラーになる
+        irb(main):008:0> b
+        Traceback (most recent call last):
+                5: from /usr/bin/irb:23:in `<main>'
+                4: from /usr/bin/irb:23:in `load'
+                3: from /usr/lib/ruby/gems/2.7.0/gems/irb-1.2.1/exe/irb:11:in `<top (required)>'
+                2: from (irb):8
+                1: from (irb):5:in `b'
+        ArgumentError (wrong number of arguments (given 0, expected 1))
+
+      rubyは最後に呼び出された値が戻り値になる
+        irb(main):009:0> a = 2
+        irb(main):011:0> b(a)
+        => 3
+
+      returnを付けることも出来る
+        irb(main):014:1* def c
+        irb(main):015:1*   return 1
+        irb(main):016:0> end
+        => :c
+        irb(main):017:0> c
+        => 1
       ```
-      irb(main):018:0> 1.class
-      => Integer
-      irb(main):019:0> 'test'.class
-      => String
-      irb(main):020:0> true.class
-      => TrueClass
-      irb(main):021:0> nil.class
-      => NilClass
-      ```
+    - 真偽値を返すメソッドはメソッド名が?で終わる
+    - !で終わるメソッドは破壊的メソッドが多いので注意
+
+    - classメソッド
+      - クラスの確認
+        ```
+        irb(main):018:0> 1.class
+        => Integer
+        irb(main):019:0> 'test'.class
+        => String
+        irb(main):020:0> true.class
+        => TrueClass
+        irb(main):021:0> nil.class
+        => NilClass
+        ```
+      - 引数のデフォルト値
+        ```
+        引数に値が入っていない状態でメソッドを実行するとエラーになるが、
+        デフォルト値を指定することで引数に値がなしでも実行出来る
+          irb(main):082:1* def a(b)
+          irb(main):083:1*   b
+          irb(main):084:0> end
+          => :a
+          irb(main):085:0> a
+          Traceback (most recent call last):
+                  5: from /usr/bin/irb:23:in `<main>'
+                  4: from /usr/bin/irb:23:in `load'
+                  3: from /usr/lib/ruby/gems/2.7.0/gems/irb-1.2.1/exe/irb:11:in `<top (required)>'
+                  2: from (irb):85
+                  1: from (irb):82:in `a'
+          ArgumentError (wrong number of arguments (given 0, expected 1))
+          irb(main):087:1* def a(b = 1)
+          irb(main):088:1*   b
+          irb(main):089:0> end
+          => :a
+          irb(main):090:0> a
+          => 1
+        ```
 
 
 
@@ -582,3 +631,24 @@
     - \t タブ
   - 有理数
     - 整数と分数と0のこと
+  - 破壊的メソッド
+    ```
+    下記のように元々変数の中の値が完全に変わって元に戻せなくなること
+      irb(main):091:0> 'test'.chop
+      => "tes"
+      irb(main):092:0> a = 'test'
+      irb(main):093:0> a.chop
+      => "tes"
+      irb(main):094:0> a
+      => "test"
+      irb(main):095:0> a.chop!
+      => "tes"
+      irb(main):096:0> a
+      => "tes"
+    ```
+  - ガーベージコレクション
+    - 使われなくなった使用炭メモリを回収して使える領域にすること
+    - rubyではデフォルトで行われる
+  - エイリアス
+    - 別名のこと
+    
