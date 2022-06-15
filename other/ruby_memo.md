@@ -652,6 +652,40 @@
               1: from (irb):4:in `load'
         LoadError (cannot load such file -- date)
         ```
+      - require_relative
+        - requireはrubyを実行しているディレクトリが起点となるが、ファイルを読み込んでいるディレクトリが起点となる
+  
+  - p, puts, print 
+    - puts, printは一般ユーザー向け
+      - 内部的にto_sメソッドが呼び出されている
+    - pは開発者向け
+      - 内部的にinspectメソッドが呼び出されている
+      ```
+      putsは標準出力に表示された後nilが返り、改行が反映される
+      printも標準出力に表示された後nilが返り、改行が反映される
+      pは標準出力に表示された後そのまま表示された値を返す、改行も特殊文字で表される
+        irb(main):005:0> puts 1
+        1
+        => nil
+        irb(main):006:0> print 1
+        1=> nil
+        irb(main):007:0> p 1
+        1
+        => 1
+        irb(main):008:0' puts 'test
+        irb(main):009:0> test'
+        test
+        test
+        => nil
+        irb(main):010:0' print 'test
+        irb(main):011:0> test'
+        test
+        test=> nil
+        irb(main):012:0' p 'test
+        irb(main):013:0> test'
+        "test\ntest"
+        => "test\ntest"
+      ```
       
       
   
