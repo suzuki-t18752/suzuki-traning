@@ -793,6 +793,18 @@
       3
       => [1, 2, 3]
       ```
+  - delete_ifメソッド
+    - ブロック内の返り値が真の値の場合、配列から削除し配列を返す
+      ```
+      irb(main):080:0> [1, 2, 3].delete_if {|i| i == 2}
+      => [1, 3]
+      irb(main):081:0> [1, 2, 3].delete_if {|i| i == 3}
+      => [1, 2]
+      irb(main):082:0> [1, 2, 3].delete_if {|i| true}
+      => []
+      irb(main):083:0> [1, 2, 3].delete_if {|i| false}
+      => [1, 2, 3]
+      ```
       
   
 
@@ -807,6 +819,13 @@
     2
     3
     => [1, 2, 3]
+    
+    ブロック引数は自由に指定出来る
+      irb(main):084:0> [1, 2, 3].each {|num| p num}
+      1
+      2
+      3
+      => [1, 2, 3]
     ```
   - {}を使うことで1行で指定することも出来る
     ```
@@ -815,6 +834,29 @@
     2
     3
     => [1, 2, 3]
+    ```
+  - ブロック内で外部の引数を扱うことも出来る
+    ```
+    irb(main):085:0> n = 0
+    irb(main):090:0> [1, 2, 3].each {|num| n += num}
+    => [1, 2, 3]
+    irb(main):091:0> n
+    => 6
+    ```
+  - 逆にブロック内の値をブロック外で使うことはできない
+    ```
+    irb(main):094:0> [1, 2, 3].each {|num| x = 0; x += num; p x}
+    1
+    2
+    3
+    => [1, 2, 3]
+    irb(main):095:0> x
+    Traceback (most recent call last):
+            4: from /usr/bin/irb:23:in `<main>'
+            3: from /usr/bin/irb:23:in `load'
+            2: from /usr/lib/ruby/gems/2.7.0/gems/irb-1.2.1/exe/irb:11:in `<top (required)>'
+            1: from (irb):95
+    NameError (undefined local variable or method `x' for main:Object)
     ```
 
 - コマンド
