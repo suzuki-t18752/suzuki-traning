@@ -805,6 +805,46 @@
       irb(main):083:0> [1, 2, 3].delete_if {|i| false}
       => [1, 2, 3]
       ```
+  - mapメソッド(エイリアスメソッドはcollect)
+    - ブロックの返り値を配列にして返す
+      ```
+      irb(main):096:0> [1,2,3].map {|n| n}
+      => [1, 2, 3]
+      irb(main):097:0> [1,2,3].map {|n| n - 1}
+      => [0, 1, 2]
+      ```
+  - selectメソッド(エイリアスメソッドはfind_all)
+    - ブロックの帰り値が真だった配列の値を返す
+      ```
+      irb(main):101:0> [1,2,4].select {|n| n % 2 == 0 }
+      => [2, 4]
+      irb(main):102:0> [1,2,4].select {|n| n % 2 == 1 }
+      => [1]
+      ```
+  - rejectメソッド
+    - ブロックの返り値が偽だった配列の値を返す
+      ```
+      irb(main):103:0> [1,2,4].reject {|n| n % 2 == 0 }
+      => [1]
+      irb(main):104:0> [1,2,4].reject {|n| n % 2 == 1 }
+      => [2, 4]
+      ```
+  - findメソッド(エイリアスメソッドはdetect)
+    - ブロックの返り値が最初に真になった配列の値を返す
+      ```
+      irb(main):105:0> [1,2,4].find {|n| n % 2 == 0 }
+      => 2
+      irb(main):106:0> [1,2,4].find {|n| n % 2 == 1 }
+      => 1
+      ```
+  - inject(エイリアスメソッドはreduce)
+    - 第1引数に配列の最初の値が入り、２回目以降がブロックの返り値が第1引数に入れられて、最後の実行で第1引数を返り値として返す
+      ```
+      irb(main):107:0> [1,2,4].inject {|result| result}
+      => 1
+      irb(main):109:0> [1,2,4].inject {|result, n| result + n }
+      => 7
+      ```
       
   
 
@@ -857,6 +897,22 @@
             2: from /usr/lib/ruby/gems/2.7.0/gems/irb-1.2.1/exe/irb:11:in `<top (required)>'
             1: from (irb):95
     NameError (undefined local variable or method `x' for main:Object)
+    ```
+  - ブロックの簡略化
+    ```
+    irb(main):110:0> [1,2,3].map {|n| n.to_s }
+    => ["1", "2", "3"]
+    irb(main):111:0> [1,2,3].map(&:to_s)
+    => ["1", "2", "3"]
+    ```
+    
+- 範囲(Range)
+  - 最初の値..最後の値で間に入る値を省略して表すことが出来る
+    ```
+    irb(main):121:0> (1..10).map {|n| n }
+    => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    irb(main):122:0> ('a'..'d').map {|n| n }
+    => ["a", "b", "c", "d"]
     ```
 
 - コマンド
