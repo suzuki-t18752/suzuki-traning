@@ -952,7 +952,73 @@
         irb(main):059:0> Set.new([1,2,3]) - Set.new([2,3,4])
         => #<Set: {1}>
         ```
+  - メソッドの引数にアスタリスク
+    - アスタリスク1つなら可変長引数、アスタリスク2つならオプション引数
+      ```
+      可変長引数
+      *をつければ引数を、配列に指定できる
+      [35] pry(main)> def array(*a)
+      [35] pry(main)*   pp a
+      [35] pry(main)* end
+      => :array
+      [36] pry(main)> array(1,2)
+      [1, 2]
+      => [1, 2]
+      [37] pry(main)> array(1)
+      [1]
+      => [1]
       
+      過剰な引数を無視することが出来る
+      [45] pry(main)> def array(a, *)
+      [45] pry(main)*   p "#{a} Hello!!!"  !!"
+      [45] pry(main)* end
+      => :array
+      [46] pry(main)> array(1, 2)
+      "1 Hello!!!"
+      => "1 Hello!!!"
+      [47] pry(main)> array(1, 2, 3)
+      "1 Hello!!!"
+      => "1 Hello!!!"
+      [48] pry(main)> def array(a)
+      [48] pry(main)*   p "#{a} Hello!!!"
+      [48] pry(main)* end
+      => :array
+      [49] pry(main)> array(1, 2)
+      ArgumentError: wrong number of arguments (given 2, expected 1)
+      from (pry):76:in `array'
+      ``` 
+  - 配列の比較
+    - 同じindex同士の値が等しい場合のみ真になる
+      ```
+      irb(main):060:0> [1,2,3] == [1,2,3]
+      => true
+      irb(main):061:0> [1,2,3] == [1,2,4]
+      => false
+      irb(main):062:0> [1,2,3] == [3,2,1]
+      => false
+      ```
+   - 文字列のみの配列
+    - %wと区切り文字で作成出来る
+    - 式展開をする場合は%W(大文字)
+      ```
+      irb(main):064:0> %w!test app gest!
+      => ["test", "app", "gest"]
+      irb(main):065:0> a = 1
+      irb(main):067:0> %W(#{a} test gest)
+      => ["1", "test", "gest"]
+      ```
+   - charsメソッド
+    - 文字を1文字づつ区切って配列にして返す
+      ```
+      irb(main):068:0> 'test'.chars
+      => ["t", "e", "s", "t"]
+      ```
+   - splitメソッド
+    - 区切り文字を指定してその区切り文字で区切られた配列を返す
+      ```
+      irb(main):070:0> 'te te te'.split(' ')
+      => ["te", "te", "te"]
+      ```
   
 
 - ブロック
