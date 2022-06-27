@@ -445,3 +445,9 @@ https://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%90%E3%83%B3_(Unix)#:~:text=%E3%82%
 ## コンテキスト context
 - 文脈、前後関係、事情、背景、状況など
 - ITの分野では、利用者の意図や状況、環境などの総体を表したり、同じ処理や記述でも状況に応じて動作などが異なる場合に、その選択基準となる判断材料や条件などを指す
+
+
+## curlでpostを行う
+```
+curl -X POST -H "Content-Type: application/json" -d '{"rsv_id":"1"}' http://localhost:3000/api/v1/
+```
