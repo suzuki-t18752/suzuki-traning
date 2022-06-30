@@ -110,16 +110,16 @@
           irb(main):026:0> a = 1
           irb(main):027:0> %Q!test#{a}!
           => "test1"
-          
+
           Qがなくてもいける
             irb(main):029:0> %!test#{a}!
             => "test1"
-          
+
           !の部分は適当な記号でOK
             irb(main):030:0> %?test#{a}?
             => "test1"
           ```
-       
+
       - ヒアドキュメント
         - 適当な識別子を指定することで改行をして文字列を作ることが出来る
           ```
@@ -129,7 +129,7 @@
           irb(main):034:0> TEXT
           irb(main):035:0> a
           => "test\ntest\n"
-          
+
           -を付けると最後の識別子をインデントさせることが出来る
             irb(main):031:0" a = <<TEXT
             irb(main):032:0" test
@@ -138,8 +138,8 @@
             irb(main):035:0> a
             => "test\ntest\n"
           -がないとヒアドキュメントとして認識されない
-          
-          
+
+
           ~を付けると文字列の先頭の空白を認識してくれる
             irb(main):052:0" <<~TEXT
             irb(main):053:0" test
@@ -149,7 +149,7 @@
             irb(main):056:0"     test
             irb(main):057:0> TEXT
             => "    test\n"
-            
+
           式展開も出来る
             irb(main):001:0> a = 1
             irb(main):002:0" <<TEXT
@@ -253,7 +253,7 @@
       irb(main):034:0> n
       => 9
     ```
-    
+
     - 10進数以外の数値
       ```
       0bを先頭に付けると２進数になる
@@ -323,8 +323,8 @@
           irb(main):037:0> '1'.to_c.class
           => Complex
         ```
-      
-    
+
+
   - 数値と文字列は暗黙的に変換されない
     ```
     irb(main):035:0> 1 + 'test'
@@ -406,7 +406,7 @@
         irb(main):051:0> not(false || true)
         => false
       ```
-        
+
   - カッコ()で優先度が変わる
     ```
     irb(main):061:0> 1 + 1 * 2
@@ -501,7 +501,7 @@
       else
         どれにも一致しなかった場合に返す値
       end
-      
+
     irb(main):064:1* case 1
     irb(main):065:1* when 2
     irb(main):066:1*   2
@@ -529,7 +529,7 @@
       irb(main):081:0> false ? 'test' : 'tetete'
       => "tetete"
       ```
-      
+
   - メソッドの定義
     - メソッド名も変数と同じ命名の仕方
       ```
@@ -625,10 +625,10 @@
         => #<Date: -4712-01-01 ((0j,0s,0n),+0s,2299161j)>
         irb(main):119:0> Date.today
         => #<Date: 2022-06-15 ((2459746j,0s,0n),+0s,2299161j)>
-        
+
         自分で作成したrubyのファイルもrequireで読み込む
         require ./test.rb 等
-        
+
         requireは1回しか読み込まないので2回目にやるとfalseになる
           irb(main):120:0> require 'date'
           => false
@@ -654,8 +654,8 @@
         ```
       - require_relative
         - requireはrubyを実行しているディレクトリが起点となるが、ファイルを読み込んでいるディレクトリが起点となる
-  
-  - p, puts, print 
+
+  - p, puts, print
     - puts, printは一般ユーザー向け
       - 内部的にto_sメソッドが呼び出されている
     - pは開発者向け
@@ -706,7 +706,7 @@
     ```
     irb(main):008:0> [1, 2, 3].class
     => Array
-    
+
     配列は添え字(インデックス)を指定することで値を取り出せる
     インデックスは0から始まる
       irb(main):009:0> [1, 2, 3][0]
@@ -716,14 +716,14 @@
     値の無いインデックスを指定するとnilが返る
       irb(main):042:0> [1, 2, 3][50]
       => nil
-      
+
     sizeメソッドやlengthメソッドで配列内の値の個数を確認で出来る
     (lengthはsizeのエイリアスメソッド)
       irb(main):043:0> [1, 2, 3].size
       => 3
       irb(main):045:0> [1, 2, 3].length
       => 3
-      
+
     改行して作成することも出来る
     複数の型を入れることも出来る
       irb(main):036:1* [
@@ -733,8 +733,8 @@
       irb(main):040:1*   [1,2,3]
       irb(main):041:0> ]
       => [1, 2, "test", [1, 2, 3]]
-      
-      
+
+
     インデックスを指定して値を新しい値を入れることも出来る
       irb(main):048:0> a = [1, 2, 3]
       irb(main):049:0> a
@@ -748,17 +748,17 @@
       => [100, 2, 3, nil, nil, nil, nil, nil, nil, nil, 100]
       irb(main):054:0> a.size
       => 11
-    
+
     <<を使うことで最後尾に値を追加出来る
       irb(main):055:0> a << 1
       => [100, 2, 3, nil, nil, nil, nil, nil, nil, nil, 100, 1]
-      
+
     delete_atメソッドで指定したインデックスの値を削除出来る
       irb(main):057:0> a.delete_at(0)
       => 100
       irb(main):058:0> a
       => [2, 3, nil, nil, nil, nil, nil, nil, nil, 100, 1]
-      
+
     複数の変数に同時に値を入れることも出来る
       irb(main):062:0> a, b, c = [1, 3, 5]
       irb(main):063:0> a
@@ -967,7 +967,7 @@
       [37] pry(main)> array(1)
       [1]
       => [1]
-      
+
       過剰な引数を無視することが出来る
       [45] pry(main)> def array(a, *)
       [45] pry(main)*   p "#{a} Hello!!!"  !!"
@@ -986,7 +986,7 @@
       [49] pry(main)> array(1, 2)
       ArgumentError: wrong number of arguments (given 2, expected 1)
       from (pry):76:in `array'
-      ``` 
+      ```
   - 配列の比較
     - 同じindex同士の値が等しい場合のみ真になる
       ```
@@ -1019,7 +1019,7 @@
       irb(main):070:0> 'te te te'.split(' ')
       => ["te", "te", "te"]
       ```
-  
+
 
 - ブロック
   - doからendまでの部分のこと
@@ -1032,7 +1032,7 @@
     2
     3
     => [1, 2, 3]
-    
+
     ブロック引数は自由に指定出来る
       irb(main):084:0> [1, 2, 3].each {|num| p num}
       1
@@ -1078,7 +1078,7 @@
     irb(main):111:0> [1,2,3].map(&:to_s)
     => ["1", "2", "3"]
     ```
-    
+
 - 範囲(Range)
   - 最初の値..最後の値で間に入る値を省略して表すことが出来る
     ```
@@ -1109,9 +1109,9 @@
     irb(main):007:0> [*1..5]
     => [1, 2, 3, 4, 5]
     ```
-    
-    
-    
+
+
+
 - rjustメソッド
   - 文字数を指定することが出来る
   - デフォルトは半角スペース
@@ -1143,7 +1143,23 @@
   irb(main):015:0> [1,2,3].join(',')
   => "1,2,3"
   ```
-    
+
+
+
+
+
+- クラスの持っているメソッドを確認
+  - クラスのメソッド一覧
+    - Class.methods
+  - クラスのインスタンスメソッド一覧
+    - instance.instance_methods
+  - publicなメソッド一覧
+    - instance.public_methods
+  - publicなインスタンスメソッド一覧
+    - instance.instance_public_methods
+  - 継承したメソッドは含まない
+    - instance.methods(false)
+
 
 - コマンド
   - ruby -v
@@ -1187,4 +1203,3 @@
     - 別名のこと
   - DRY原則
     - Don`t repeat yourselfの略で繰り返しを避けること
-    
