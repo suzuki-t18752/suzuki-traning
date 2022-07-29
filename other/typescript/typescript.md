@@ -10,6 +10,21 @@
 - 静的型付け言語
 - フロントエンドはもちろん、node.jsを使うことでバックエンドにも対応できる
 
+- 開発出来るもの
+  - デスクトップアプリケーション
+    - WindowsやmacOS、Linux向けにデスクトップアプリケーションを作れる
+    - javaScript、HTML、CSSの技術スタックで開発できるElectronを使う
+  - CLIアプリケーション
+    - コマンドラインツールの開発
+    - サーバーサイドJavaScript実行環境のNode.jsとTypeScriptを組み合わせて開発
+    - CLIアプリケーションフレームワークには、Heroku製のoclif
+      - Google製のzxを用いると、シェルスクリプトの代わりにTypeScriptを使う
+  - ブラウザ拡張
+  - 機械学習
+    - TensorFlow.jsはGoogleが開発した機械学習ライブラリ
+    - Brain.jsはニューラルネットワークのライブラリ
+  - 組み込み系
+
 ## 予備知識
 - ECMAScriptは
   - javascriptを標準化するためのもの
