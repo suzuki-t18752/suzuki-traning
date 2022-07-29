@@ -451,3 +451,17 @@ https://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%90%E3%83%B3_(Unix)#:~:text=%E3%82%
 ```
 curl -X POST -H "Content-Type: application/json" -d '{"rsv_id":"1"}' http://localhost:3000/api/v1/
 ```
+
+### 正規表現
+- https://help.alteryx.com/2019.1/ja/boost/character_class_names.html
+- 数列のみ
+  - ^[0-9]+$
+
+- ruby 正規表現
+  - ^	Start of line
+  - $	End of line
+    - 改行ok
+  - \A	Start of string
+  - \z	End of string
+    - 改行ng
+- 改行が入った場合に有効か無効か変わる為基本的に\Aと\zを使うべき
