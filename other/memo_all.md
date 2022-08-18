@@ -267,6 +267,71 @@ awk -F'[フィールド区切り文字(複数可能)]' -v '変数=xx' '{awkコ�
 このコマンドを使うと独立したセッションを作成して、ネットワークが切れても処理が停止せず、続けることが出来る
 サーバーに接続して処理時間の長いものを実行する場合は必ずこのコマンドを使うようにする！！！！
 
+## scpコマンド
+異なるサーバー間でsshを利用しファイルのコピーを行える
+
+```
+scp ユーザ名@サーバのホスト名(or IPアドレス):コピーしたいファイル 保存先のパス
+
+scp suzuki@suzuki-web:/opt/suzuki.jp/public/suzuki.html ./
+```
+
+## xargsコマンド
+標準入力からコマンドラインを作成して実行する
+[参考](https://techblog.kyamanak.com/entry/2018/02/12/202256)
+
+```
+例
+ファイル内のコマンドを実行出来る
+-0で改行出来る？
+-tで実行前のコマンドを表示する
+cat a.txt | xargs -0t sh -c
+
+-iで引数の位置を指定出来る
+例
+検索したファイルを/root下にコピーしてくる
+[root@suzuki-t ~]# find / -name "*php.ini*" | xargs -ti cp {} /root/.
+find: ‘/proc/29995’: そのようなファイルやディレクトリはありません
+cp /usr/local/lib/php.ini /root/.
+cp /usr/local/src/php-7.4.23/php.ini-production /root/.
+cp /usr/local/src/php-7.4.23/php.ini-development /root/.
+[root@suzuki-t ~]# ls -l
+合計 276
+-rw-r--r--. 1 root root    22 10月  4 15:41 a.txt
+-rw-------. 1 root root  1530  9月 29 15:26 anaconda-ks.cfg
+-rw-r--r--. 1 root root 27033  9月 22 15:27 centOSstart.png
+-rw-r--r--. 1 root root 72601 10月  4 16:02 php.ini
+-rw-r--r--. 1 root root 72554 10月  4 16:02 php.ini-development
+-rw-r--r--. 1 root root 72584 10月  4 16:02 php.ini-production
+-rw-r--r--. 1 root root 19086 10月  4 15:29 work.sh
+-rw-r--r--. 1 root root  1383 10月  4 15:39 work_sh.log
+[root@suzuki-t ~]# find /root -name "*php.ini*"
+/root/php.ini
+/root/php.ini-production
+/root/php.ini-development
+
+例
+検索したファイルを一括削除
+[root@suzuki-t ~]# find /root -name "*php.ini*" | xargs -t rm
+rm /root/php.ini /root/php.ini-production /root/php.ini-development
+[root@suzuki-t ~]# ls -l
+合計 60
+-rw-r--r--. 1 root root    22 10月  4 15:41 a.txt
+-rw-------. 1 root root  1530  9月 29 15:26 anaconda-ks.cfg
+-rw-r--r--. 1 root root 27033  9月 22 15:27 centOSstart.png
+-rw-r--r--. 1 root root 19086 10月  4 15:29 work.sh
+-rw-r--r--. 1 root root  1383 10月  4 15:39 work_sh.log
+
+例
+grep
+-r 指定したディレクトリ以下を検索する
+-l 出力をファイル名のみにする
+[root@suzuki-t ~]# sudo grep -rl '<VirtualHost 192.168.56.3:80>' /usr/local/httpd/httpd-2.4.48/
+/usr/local/httpd/httpd-2.4.48/conf/extra/httpd-vhosts.conf
+
+指定したディレクトリ以下のファイル内<VirtualHost 192.168.56.3:80>を検索し、<VirtualHost 192.168.56.2:80>に書き換える
+grep -rl '<VirtualHost 192.168.56.3:80>' /usr/local/httpd/httpd-2.4.48/ | xargs sed -i -e "s%<VirtualHost 192.168.56.3:80>%<VirtualHost 192.168.56.2:80>%g"
+```
 ## 認証認可の意味違い
 認証とは、相手の身元を確認すること
 認可とは、権限を与えること
