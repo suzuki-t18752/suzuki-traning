@@ -127,6 +127,21 @@ https://ja.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 ## 集計等を行えるコマンド
 awk '{printf $3"\n"}' ans.txt | sort | uniq -c
 
+sort test.csv| uniq -c | sort -nr -k 1 | less
+
+## sortコマンド
+- 順序を並びかえるコマンド
+```
+sort -nr -k 1
+```
+- -n 数値比較
+- -r 降順
+- -k 比較場所の指定(上の場合は1文字目)
+
+## uniqコマンド
+- 同じ文字列を1つにまとめるコマンド
+- -c 同じものの数を数える
+
 ## sudoとrootでは環境変数が違う
 
 ## manコマンド
