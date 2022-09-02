@@ -537,7 +537,7 @@ https://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%90%E3%83%B3_(Unix)#:~:text=%E3%82%
 curl -X POST -H "Content-Type: application/json" -d '{"rsv_id":"1"}' http://localhost:3000/api/v1/
 ```
 
-### 正規表現
+## 正規表現
 - https://help.alteryx.com/2019.1/ja/boost/character_class_names.html
 - 数列のみ
   - ^[0-9]+$
@@ -550,3 +550,17 @@ curl -X POST -H "Content-Type: application/json" -d '{"rsv_id":"1"}' http://loca
   - \z	End of string
     - 改行ng
 - 改行が入った場合に有効か無効か変わる為基本的に\Aと\zを使うべき
+
+
+## ピア
+- https://e-words.jp/w/%E3%83%94%E3%82%A2.html#:~:text=%E3%83%94%E3%82%A2%E3%81%A8%E3%81%AF%E3%80%81%E5%90%8C%E5%83%9A%E3%80%81%E5%90%8C%E8%BC%A9,%E3%81%AE%E3%81%93%E3%81%A8%E3%82%92%E3%83%94%E3%82%A2%E3%81%A8%E3%81%84%E3%81%86%E3%80%82
+- https://wa3.i-3-i.info/word1306.html
+- サーバーとクライアントのような役割分担や上下関係のない、対等な機器同士が相互に通信する接続形態
+
+
+## トラフィック
+- https://wa3.i-3-i.info/word1972.html
+- ネットワークに流れる情報もしくは情報量のこと
+
+## ハードコーディング
+- 本来いくつかの処理に分けるべき処理をまとめてしまうこと
