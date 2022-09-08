@@ -20,3 +20,34 @@
 [13] pry(main)> Time.now + 1.month
 => 2022-07-30 14:15:49.2873874 +0900
 ```
+
+## ActiveModel
+- optional: true
+  - nilを許容するかどうか
+  - デフォルトはfalseでnilを許容しない
+
+## ActiveRecord
+- ActiveRecordの変更を行った際にmodelの確認を忘れないように
+- DBの中身によっては変更を行えないこともあるので確認を忘れない
+  - 例: そのカラムにnullが入っているにも関わらずnot null制約を入れようとした場合
+    - 予めそのカラムがnullでないようにそのレコードを削除したり、値を入れるようにする
+### 外部キー制約
+- on_delete
+  - nullify
+    - 紐づいているレコードが削除された際に設定したカラムにnullが入る
+  - cascade
+    - 紐づいているレコードが削除された際に設定したレコードも削除される
+- 外部キー制約の変更
+  - 1度削除を行ってから追加する必要がある
+  - 下記のように複数テーブルまとめて行える
+  ```
+  class UpdateForeignKeyOfUploadImages < ActiveRecord::Migration[6.1]
+    def change
+      remove_foreign_key :gg_upload_images, :image_files, on_delete: :nullify
+      add_foreign_key :gg_upload_images, :image_files, on_delete: :cascade
+
+      remove_foreign_key :hh_upload_images, :image_files, on_delete: :nullify
+      add_foreign_key :hh_upload_images, :image_files, on_delete: :cascade
+    end
+  end
+  ```
