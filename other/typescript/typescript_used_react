@@ -68,3 +68,126 @@
         ほぼhtmlのままどのように表示するのか書ける
         ```
   - コンポーネントベース
+    - コンポーネントというのはUIの部品のこと
+      - 小さいもので言えばボタンや入力欄、より大きめの部品だとフォーム、さらに大きい部品ではページもコンポーネント
+    - Reactには、小さいコンポーネントを組み合わせ、大きなアプリケーションを成すという思想がある
+    - メリットは、同じコンポーネントを再利用できる点
+    - オープンソースのコンポーネントも数多く公開されており、カレンダーUIのような自力で作ると面倒なコンポーネントも種類豊富ある
+    
+## 環境の準備
+- typescriptの環境作成後
+- Yarnのインストール
+```
+npm install -g yarn
+
+suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ npm install -g yarn
+added 1 package, and audited 2 packages in 583ms
+found 0 vulnerabilities
+```
+- プロジェクトの作成
+  - npx create-react-app プロジェクト名 --template typescript
+  ```
+  npx create-react-app like-button --template typescript
+  
+  suzuki_t18752@DESKTOP-HR1248R:~$ npx create-react-app like-button --template typescript
+    Need to install the following packages:
+      create-react-app@5.0.1
+    Ok to proceed? (y) y
+    npm WARN deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap.
+
+    Creating a new React app in /home/suzuki_t18752/like-button.
+
+    Installing packages. This might take a couple of minutes.
+    Installing react, react-dom, and react-scripts with cra-template-typescript...
+
+
+    added 1393 packages in 41s
+
+    212 packages are looking for funding
+      run `npm fund` for details
+
+    Initialized a git repository.
+
+    Installing template dependencies using npm...
+
+    added 50 packages, and changed 1 package in 5s
+
+    224 packages are looking for funding
+      run `npm fund` for details
+
+    We detected TypeScript in your project (src/App.test.tsx) and created a tsconfig.json file for you.
+
+    Your tsconfig.json has been populated with default values.
+
+    Removing template package using npm...
+
+
+    removed 1 package, and audited 1443 packages in 2s
+
+    224 packages are looking for funding
+      run `npm fund` for details
+
+    9 high severity vulnerabilities
+
+    To address all issues (including breaking changes), run:
+      npm audit fix --force
+
+    Run `npm audit` for details.
+    Git commit not created Error: Command failed: git commit -m "Initialize project using Create React App"
+        at checkExecSyncError (node:child_process:861:11)
+        at execSync (node:child_process:932:15)
+        at tryGitCommit (/home/suzuki_t18752/like-button/node_modules/react-scripts/scripts/init.js:62:5)
+        at module.exports (/home/suzuki_t18752/like-button/node_modules/react-scripts/scripts/init.js:350:25)
+        at [eval]:3:14
+        at Script.runInThisContext (node:vm:129:12)
+        at Object.runInThisContext (node:vm:313:38)
+        at node:internal/process/execution:79:19
+        at [eval]-wrapper:6:22 {
+      status: 128,
+      signal: null,
+      output: [ null, null, null ],
+      pid: 6895,
+      stdout: null,
+      stderr: null
+    }
+    Removing .git directory...
+
+    Success! Created like-button at /home/suzuki_t18752/like-button
+    Inside that directory, you can run several commands:
+
+      npm start
+        Starts the development server.
+
+      npm run build
+        Bundles the app into static files for production.
+
+      npm test
+        Starts the test runner.
+
+      npm run eject
+        Removes this tool and copies build dependencies, configuration files
+        and scripts into the app directory. If you do this, you can’t go back!
+
+    We suggest that you begin by typing:
+
+      cd like-button
+      npm start
+
+    Happy hacking!
+  ```
+  
+- 開発サーバーの起動
+  - yarn start
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
