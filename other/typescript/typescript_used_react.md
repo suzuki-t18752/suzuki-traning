@@ -249,9 +249,41 @@ function LikeButton() {
   return <span className="likeButton">♥ {count}</span>;
 }
 ```
-  
-  
-  
+- 外部ファイルの取り込み
+```
+cssを読み込むのに下記を記載している
+import "./App.css";
+```
+
+- 値の管理(useState)
+  - useStateは関数コンポーネントに状態を持たせるためのReactの機能
+```
+import React, { useState } from "react"; // これが必須
+import logo from './logo.svg';
+import './App.css';
+
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <LikeButton />
+      </header>
+    </div>
+  );
+}
+ 
+function LikeButton() {
+  const [count, setCount] = useState(999);　//useStateの戻り値をcountとsetCountの2つの変数に代入している
+  const handleClick = () => {
+    setCount(count + 1); //現在のcountの値に1を足した値をsetCount関数に渡す
+  };
+  return (
+    <span className="likeButton" onClick={handleClick}>　//ボタンをクリックするたびにhandleClickが実行されcountが加算される
+      ♥ {count}
+    </span>
+  );
+}
+```
   
   
   
