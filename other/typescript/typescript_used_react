@@ -1,0 +1,70 @@
+# typesctiptでReactを使う
+
+## Reactとは
+- ReactはFacebook社が開発した、ウェブアプリケーションのUIを作るためのパッケージ
+- 使う理由
+  - UIが複雑になるとReactなしではコードの記述量が増大したり、可読性が悪くなったりと難易度が上がり
+    - UIが今どのような状態なのかを管理するのは、プログラマが把握しきれない複雑さになる
+    - 複雑なUIやインタラクションを短く簡潔に読みやすく書けるようになり、状態の管理も分かりやすくなる
+- 特徴
+  - 仮想DOM
+    - DOM(document object model)
+      - HTMLをJavaScriptから参照・操作する仕組み
+      - DOMはHTMLを操作するためのAPIのようなもの
+      - プログラマがDOMを操作すると、間接的にHTMLが書き換えられ、その結果が画面に描画される
+        - 多くの動的なUIはDOM操作で成り立っている
+      ```
+      // <input id="email">の文字色を赤色にするDOM操作の例
+      const emailInput = document.getElementById("email");
+      emailInput.style.color = "red";
+      ```
+    - 仮想DOMはリアルDOMのプロキシのようなもので、リアルDOMと比べて、状態管理上のバグを起こしにくい設計になっている
+      - パフォーマンス面では描画処理の最適化もする
+    - 仮想DOMは、複雑なUIを苦労せずに実装するための仕組み
+  - 宣言的UI
+    - Reactを使わずにUIを実装すると、命令的なコードになり、
+      - 命令的なコードでは、何かを表示したい場合でもどのように表示するかのhowの部分を細かく書く必要がある
+      - 命令的なコードと宣言的なコードの違い
+       ```
+       下記HTMLを表示する書き方
+       <ul>
+          <li>リンゴ</li>
+          <li>オレンジ</li>
+          <li>ぶどう</li>
+       </ul>
+       
+       命令的なコード
+       const list = document.createElement("ul");
+       const apple = document.createElement("li");
+       apple.innerText = "リンゴ";
+       list.append(apple);
+       const orange = document.createElement("li");
+       orange.innerText = "オレンジ";
+       list.append(orange);
+       const grape = document.createElement("li");
+       grape.innerText = "ぶどう";
+       list.append(grape);
+       
+       説明
+       ul要素を作り、変数listに代入する
+        li要素を作り、変数appleに代入する
+        appleのテキストは「リンゴ」にする
+        listにappleを追加する
+        li要素を作り、変数orangeに代入する
+        orangeのテキストは「オレンジ」にする
+        listにorangeを追加する
+        
+       
+       宣言的なコード
+       function Fruits() {
+          return (
+            <ul>
+              <li>リンゴ</li>
+              <li>オレンジ</li>
+              <li>ぶどう</li>
+            </ul>
+          );
+        }
+        ほぼhtmlのままどのように表示するのか書ける
+        ```
+  - コンポーネントベース
