@@ -208,10 +208,47 @@ found 0 vulnerabilities
     - HTMLを使ってデータを記述し、見た目はきれいに整理されていても、マシン側では文章の意味を理解できない
       - しかし、XMLを使って文章中のデータの要素名や属性を定義することで、マシン側にデータの重要度（大小関係など）を認識させられる
   
-  
-  
-  
-  
+### 書き方
+- ReactのJSXでは、HTMLタグのdivやheaderが使える
+  - 以外に自分で定義した関数もタグとして使うことができる
+    - JSXを戻り値として返す関数だけがタグとして使える
+- 関数コンポーネント 
+  - JSXを戻り値にする関数
+```
+関数をタグとして使う例
+
+LikeButton関数
+function App() {
+  return (
+    <div className="App">
+      <header className="App-header">
+        <LikeButton />
+      </header>
+    </div>
+  );
+}
+ 
+function LikeButton() {
+  return <span>いいねボタン予定地</span>;
+}
+```
+
+- 関数コンポーネントに変数を定義して使う
+  - JSX内では{}で囲まれた部分には、JavaScriptの変数や式が書ける
+```
+function LikeButton() {
+  const count = 999;
+  return <span>♥ {count + 1}</span>;
+}
+```
+- 関数コンポーネントにCSSを使う
+  - タグにclassName属性を追加
+```
+function LikeButton() {
+  const count = 999;
+  return <span className="likeButton">♥ {count}</span>;
+}
+```
   
   
   
