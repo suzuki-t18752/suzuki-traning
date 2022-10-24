@@ -263,7 +263,6 @@ suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ node increment.js
     - コンパイラの役割のひとつは、型の問題をチェックし、発見した問題点をプログラマに報告すること
     - TypeScriptコンパイラはとても賢く、ノーヒントでも型の問題を指摘してくれるがヒントを与えた方が緻密なチェックをしてくれる
     - コンパイラに与えるヒントのことを「型注釈(type annotation)」と言う
-    - コンパイルした際に実際にブラウザで実行されるJavascriptファイルが生成される
     ```
     incrementの引数に型注釈を行う
     function increment(num: number) {
@@ -286,3 +285,5 @@ suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ node increment.js
     suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ tsc increment.ts
     エラーがでずに終了する
     ```
+  - コンパイルした際に実際にブラウザで実行されるJavascriptファイルが生成される
+    - TypeScriptコンパイラはJavaScript実行環境で動かす用のJavaScriptファイルを生成してくれ、開発者はこの成果物のJavaScriptファイルを本番環境にデプロイする
