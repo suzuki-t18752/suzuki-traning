@@ -287,3 +287,25 @@ suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ node increment.js
     ```
   - コンパイルした際に実際にブラウザで実行されるJavascriptファイルが生成される
     - TypeScriptコンパイラはJavaScript実行環境で動かす用のJavaScriptファイルを生成してくれ、開発者はこの成果物のJavaScriptファイルを本番環境にデプロイする
+
+
+## 基礎
+### 変数宣言
+- let
+  - 再代入が可能
+  - letは変数の初期値なしで変数定義できます。初期値なしの変数の値はundefinedになる
+```
+let x = 1;
+x = 2;
+
+let x;//undefined
+x = 1;
+```
+- const 
+  - 初期値は必須
+  - 変数への再代入が禁止
+```
+const y = 2;
+y = 1;
+TypeError: Assignment to constant variable.
+```
