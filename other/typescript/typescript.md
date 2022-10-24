@@ -220,3 +220,69 @@ found 0 vulnerabilities
 suzuki_t18752@DESKTOP-HR1248R:~$ tsc -v
 Version 4.8.4
 ```
+
+
+## いろいろ
+- ファイルの実行
+  - node ファイルのパス
+  - ファイルを実行する
+```
+suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ node increment.js
+1000
+```
+- 関数
+```
+incrementという関数を定義している
+与えた引数numに1の数値を足した値を返す関数
+function increment(num) {
+  return num + 1;
+}
+
+実行結果
+console.log(increment(999));
+suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ node increment.js
+1000
+```
+
+- 型強制
+  - 型が異なる2つの値を処理するとき、暗黙的に別の型へ変換されること
+```
+increment関数に与える引数を数値から文字列に変えた場合
+console.log(increment("999"));
+suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ node increment.js
+9991
+
+上記のように文字列999に1が連結されたものが返る
+```
+
+- JavaScriptをTypeScriptに変換する
+  - ファイルの拡張子を.jsから.tsに変更する
+
+- コンパイラを働かせる
+  - TypeScriptの目玉機能はコンパイラ
+    - コンパイラの役割のひとつは、型の問題をチェックし、発見した問題点をプログラマに報告すること
+    - TypeScriptコンパイラはとても賢く、ノーヒントでも型の問題を指摘してくれるがヒントを与えた方が緻密なチェックをしてくれる
+    - コンパイラに与えるヒントのことを「型注釈(type annotation)」と言う
+    - コンパイルした際に実際にブラウザで実行されるJavascriptファイルが生成される
+    ```
+    incrementの引数に型注釈を行う
+    function increment(num: number) {
+    //                 ^^^^^^^^型注釈
+      return num + 1;
+    }
+  - コンパイラでのチェック
+    - tsc ファイルのパス
+    ```
+    数値型が入るはずなのに文字列型が入ってきていますよと警告が出ている
+    suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ tsc increment.ts
+    increment.ts:6:25 - error TS2345: Argument of type 'string' is not assignable to parameter of type 'number'.
+
+    6   console.log(increment("999"));
+                              ~~~~~
+    Found 1 error in increment.ts:6
+    
+    修正すると
+    console.log(increment(999));
+    suzuki_t18752@DESKTOP-HR1248R:~/test_typescript$ tsc increment.ts
+    エラーがでずに終了する
+    ```
