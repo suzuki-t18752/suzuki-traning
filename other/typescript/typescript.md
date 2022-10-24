@@ -205,5 +205,18 @@ suzuki_t18752@DESKTOP-HR1248R:~$ node -v
 v16.18.0
 ```
 
- 
+- TypeScriptをインストール
+```
+TypeScriptコンパイラをインストール
+npm install -g typescript
 
+suzuki_t18752@DESKTOP-HR1248R:~$ npm install -g typescript
+
+added 1 package, and audited 2 packages in 899ms
+
+found 0 vulnerabilities
+
+インストールの確認
+suzuki_t18752@DESKTOP-HR1248R:~$ tsc -v
+Version 4.8.4
+```
