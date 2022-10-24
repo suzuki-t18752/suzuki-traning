@@ -163,7 +163,46 @@ Homebrew/homebrew-core (git revision 79d5c2381ae; last commit 2022-10-24)
 
 - Node.jsのインストール
 ```
+brew install node@16
 
+実行結果
+==> Installing node@16
+==> Pouring node@16--16.18.0.x86_64_linux.bottle.tar.gz
+==> Caveats
+node@16 is keg-only, which means it was not symlinked into /home/linuxbrew/.linuxbrew,
+because this is an alternate version of another formula.
+
+If you need to have node@16 first in your PATH, run:
+  echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/node@16/bin:$PATH"' >> ~/.profile
+
+For compilers to find node@16 you may need to set:
+  export LDFLAGS="-L/home/linuxbrew/.linuxbrew/opt/node@16/lib"
+  export CPPFLAGS="-I/home/linuxbrew/.linuxbrew/opt/node@16/include"
+
+==> Summary
+🍺  /home/linuxbrew/.linuxbrew/Cellar/node@16/16.18.0: 1,918 files, 55.5MB
+==> Running `brew cleanup node@16`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+==> Caveats
+==> node@16
+node@16 is keg-only, which means it was not symlinked into /home/linuxbrew/.linuxbrew,
+because this is an alternate version of another formula.
+
+If you need to have node@16 first in your PATH, run:
+  echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/node@16/bin:$PATH"' >> ~/.profile
+
+For compilers to find node@16 you may need to set:
+  export LDFLAGS="-L/home/linuxbrew/.linuxbrew/opt/node@16/lib"
+  export CPPFLAGS="-I/home/linuxbrew/.linuxbrew/opt/node@16/include"
+  
+
+上記に結果にある下記コマンドを実行
+echo 'export PATH="/home/linuxbrew/.linuxbrew/opt/node@16/bin:$PATH"' >> ~/.profile
+
+上記実行後確認
+suzuki_t18752@DESKTOP-HR1248R:~$ node -v
+v16.18.0
 ```
 
  
