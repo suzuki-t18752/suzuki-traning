@@ -458,6 +458,101 @@ const num: number = 123;
     ```  
 
 - 文字列型 (string type)
+  - 他の言語と違いシングルクォートとダブルクフォートで違いがない
+  ```
+  "Hello"; 
+  'Hello'; 
+  `Hello`;
+  ```
+  - 同じ引用符が含まれている場合は、バックスラッシュ\でエスケープする
+  ```
+  'He said "madam, I\'m Adam."'
+  "He said \"madam, I'm Adam.\""
+  
+  シングルクォートでも\nで改行出来る(rubyはダブルクフォートのみ)
+  ```
+  - テンプレートリテラル
+    - バッククォート`で囲んだ文字列
+    - 改行と式の挿入(expression interpolation)ができる
+    ```
+    const count = 10;
+    console.log(`現在、${count}名が見ています。`);
+    => 現在、10名が見ています。
+    
+    `te
+    st`
+    => 'te\nst'
+    'te
+    st'  
+    VM844:1 Uncaught SyntaxError: Invalid or unexpected token
+    ```
+  - クフォートの使用基準
+    1. 基本的に"を使用する
+    2. 文字列の中に"が含まれる場合は'を使用する
+    3. 文字列展開する必要があるときは`を使用する
+  - 型注釈
+  ```
+  const message: string = "Hello";
+  ```
+  - 文字列結合
+  ```
+  "hello" + "world"
+  ```
+
+- null型
+  - nullは値がないことを示す値
+  ```
+  const x = null;
+  ```
+  - 型注釈
+  ```
+  const x: null = null;
+  ```
+  - nullに対してtypeofを用いると"object"が返るので注意
+  ```
+  typeof null
+  => 'object'
+  typeof 1
+  => 'number'
+  typeof [1,2]
+  => 'object'
+  typeof 'te'
+  => 'string'
+  ```
+
+- undefined型
+  - 未定義を表す
+  - 変数に値がセットされていないとき、戻り値が無い関数、オブジェクトに存在しないプロパティにアクセスしたとき、配列に存在しないインデックスでアクセスしたときなど
+  ```
+  let name;
+  console.log(name);
+  => undefined
+
+  function func() {}
+  console.log(func());
+  => undefined
+
+  const obj = {};
+  console.log(obj.name);
+  => undefined
+
+  const arr = [];
+  console.log(arr[1]);
+  => undefined
+  ```
+  - undefinedにはリテラルがない
+  - undefinedは変数
+  - 型注釈
+  ```
+  const x: undefined = undefined;
+  ```
+    - TypeScriptで戻り値なしを型注釈で表現する場合、undefinedではなくvoidを用いる
+
+- シンボル型 (symbol type)
+
+
+
+
 
 
 
