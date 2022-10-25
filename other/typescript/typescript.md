@@ -549,13 +549,52 @@ const num: number = 123;
     - TypeScriptで戻り値なしを型注釈で表現する場合、undefinedではなくvoidを用いる
 
 - シンボル型 (symbol type)
+  - その値が一意になる値
+  - 論理型や数値型は値が同じであれば、等価比較がtrueになるが、シンボルはシンボル名が同じであっても、初期化した場所が違うとfalseになる
+  ```
+  const s1 = Symbol("foo");
+  const s2 = Symbol("foo");
+  console.log(s1 === s1);
+  => true
+  console.log(s1 === s2);
+  => false
+  ```
+  - 型注釈
+  ```
+  const s: symbol = Symbol();
+  ```
+  - シンボルの用途
+    - JavaScriptの組み込みAPIの下位互換性を壊さずに新たなAPIを追加すること
+      - JavaScript本体をアップデートしやすくするために導入されたもの
+      - なのでシンボル型を使ってコードを書くことはそうそうない
 
-
-
-
-
-
-
+- bigint型
+  - 数値型よりも大きな整数を扱える
+  - bigint型のリテラルは整数値の末尾にnをつけて書
+  ```
+  const x = 100n;
+  ```
+  - 型注釈
+  ```
+  const x: bigint = 100n;
+  ```
+  - BigInt関数
+    - bigint型はBigInt関数を使って作ることができ、BigInt関数は第1引数に数値もしくは文字列を渡す
+  ```
+  const x = BigInt(100);
+  const y = BigInt("9007199254740991");
+  ```
+  - bigint型を数値型と計算する
+    - bigint型と数値型はそのままでは一緒に演算をすることはできない
+    - どちらかに型を合わせる必要がある
+  ```
+  2n + 3;
+  Operator '+' cannot be applied to types '2n' and '3'.
+  
+  const i = 2n + BigInt(3); //=> 5n
+  console.log(i);
+  => 5
+  ```
 
 
 
