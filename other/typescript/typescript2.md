@@ -78,7 +78,7 @@ if (value === 0) {
 const drink = if (age >= 20) "ビール" else "ジュース";
 ```
 ### 三項演算子
-``
+```
 const result = value === 0 ? "OK" : "NG";
 
 条件のネスト
