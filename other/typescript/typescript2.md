@@ -182,6 +182,149 @@ switch (条件) {
       console.log(2);
   }
   ```
+- switchと変数スコープ
+```
+switchごとに変数スコープが作られる
+switch (
+  true // 変数スコープその1
+) {
+  default:
+    switch (
+      true // 変数スコープその2
+    ) {
+      default:
+      // ...
+    }
+}
+
+
+caseの変数スコープはない、複数のcaseがある場合、switch全体で変数スコープを共有
+複数のcaseで同じ変数名を宣言すると実行時エラーが発生
+let x = 1;
+switch (x) {
+  case 1:
+    const sameName = "A";
+    break;
+  case 2:
+    const sameName = "B";
+SyntaxError: Identifier 'sameName' has already been declared
+    break;
+}
+
+TypeScriptでは、同じ変数名を宣言するとコンパイルエラー
+let x = 1;
+switch (x) {
+  case 1:
+    const sameName = "A";
+Cannot redeclare block-scoped variable 'sameName'.
+    break;
+  case 2:
+    const sameName = "B";
+Cannot redeclare block-scoped variable 'sameName'.
+    break;
+}
+
+caseに変数スコープを作る方法
+中カッコでcase節を囲む
+let x = 1;
+switch (x) {
+  case 1: {
+    const sameName = "A";
+    break;
+  }
+  case 2: {
+    const sameName = "B";
+    break;
+  }
+}
+```
+
+### 例外処理(exception)
+- 例外にはErrorオブジェクトを使い、throw構文で例外を投げ、try-catch構文で例外を捕捉する
+```
+try {
+  throw new Error("something wrong");
+} catch (e) {
+  // something wrong
+  console.log(e.message);
+}
+
+throw構文
+throw new Error("something wrong");
+=> Uncaught Error: something wrong at <anonymous>:1:7
+  
+catchの型
+catchの変数の型はデフォルトでany型
+TypeScriptのコンパイラーオプションのuseUnknownInCatchVariablesを有効にすると、
+catchの変数の型がunknown型になり、「どんな値がthrowされるか分からない」ことを型として正確に表現できる
+  
+catchの分岐
+JavaScriptでエラーの型によってエラーハンドリングを分岐したい場合は、catchブロックの中で分岐を書く
+try {
+  // ...
+} catch (e) {
+  if (e instanceof TypeError) {
+    // TypeErrorに対する処理
+  } else if (e instanceof RangeError) {
+    // RangeErrorに対する処理
+  } else if (e instanceof EvalError) {
+    // EvalErrorに対する処理
+  } else {
+    // その他のエラー
+  }
+}
+  
+try-catchはブロックスコープ
+try-catch文内の変数はブロックスコープになり宣言された変数は、try-catchの外では参照できない
+  
+async function fetchData() {
+  try {
+    const res = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+    const data = await res.json();
+    console.log(data); // dataが参照できる
+  } catch (e: unknown) {
+    return;
+  }
+  console.log(data); // dataが参照できない
+Cannot find name 'data'.
+}
+ 
+try-catch文の外でも変数を参照したい場合は、tryの前に代入用の変数をlet宣言しておく
+async function fetchData() {
+  let data: any;
+  try {
+    const res = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+    data = await res.json();
+  } catch (e: unknown) {
+    return;
+  }
+  console.log(data); // dataが参照できる
+}
+  
+finallyブロック
+finallyは例外が発生しようがしまいが必ず実行される処理
+try {
+  // ...
+} catch (e) {
+  // ...
+} finally {
+  // ...
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
