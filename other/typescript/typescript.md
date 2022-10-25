@@ -644,8 +644,43 @@ const num: number = 123;
 
 - リテラル型 (literal type)
   - プリミティブ型の特定の値だけを代入可能にする型
+  ```
+  let x: 1;
+  x = 1;
+  x = 100;
+  Type '100' is not assignable to type '1'.
+  
+  論理型のtrueとfalse
+  数値型の値
+  文字列型の文字列
+  const isTrue: true = true;
+  const num: 123 = 123;
+  const str: "foo" = "foo";
+  ```
+  - 一般的にリテラル型はマジックナンバーやステートの表現に用いられる
+  ```
+  let num: 1 | 2 | 3 = 1;
+  ```
 
+- any型
+  - どんな型でも代入を許す型
+  - プリミティブ型であれオブジェクトであれ何を代入してもエラーにならない
+  - 暗黙のany
+    - 型を省略してコンテキストから型が推論できない時、TypeScriptは暗黙的に型をany型として扱う
+    ```
+    name 変数がany型として判定されるため、型チェックは問題なく通っているが、number型の値で toUpperCase() のメソッドの呼び出しが実行されるため、未定義メソッドとしてエラーが発生する
+    function hello(name) {
+                
+    (parameter) name: any
+      console.log(`Hello, ${name.toUpperCase()}`);
+    }
 
+    hello(1);
+    name.toUpperCase is not a function
+    ```
+    - noImplicitAny
+      - 上記のような状況を防止するため、暗黙のanyを規制するオプション
+      - tsconfig.json にて noImplicitAny: true を設定することで、TypeScriptが型をany型と推測した場合にエラーが発生する
 
 
 
