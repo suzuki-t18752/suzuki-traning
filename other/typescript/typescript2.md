@@ -312,11 +312,58 @@ try {
 }
 ```
 
+## 関数
+- 基本
+```
+function hello() {
+  return "hello";
+}
+```
+- 型注釈方法
+```
+//num:の後ろが引数の型注釈
+//increment(num: number):の後ろが返り値の型注釈
+function increment(num: number): number {
+  return num + 1;
+}
+```
+  - 引数の型注釈を省略した場合、コンパイラーはany型と暗黙的に解釈
+  - コンパイラーオプションのnoImplicitAnyをtrueに設定することで、引数の型注釈を必須に
+  - 戻り値の型注釈を省略した場合、コンパイラーがコードから型推論する
+  - returnが複数あり違う型を返している場合推論される型はユニオン型
+  ```
+  function getFirst(items: number[]) {
+    if (typeof items[0] === "number") {
+      return items[0];
+    }
+    return null;
+  }
 
+  getFirst([1, 2, 3]);
+  // function getFirst(items: number[]): number | null
+  ```
 
-
-
-
+- 関数式
+  - 式とは、評価した結果が値になるものを言い、関数式は値になるので、変数に直接代入できる
+  ```
+  const 変数名 = function 関数名(引数) {
+    // 処理内容
+  };
+  ```
+  - 匿名関数や無名関数
+    - 関数名を省略できる
+    ```
+    const 変数名 = function () {};
+    
+    関数式を呼び出すには、変数名を使う
+    変数名(); // 呼び出し
+    ```
+  - 関数式は、オブジェクトのプロパティに直接代入することもできる
+  ```
+  const オブジェクト = {
+    メソッド名: function () {},
+  };
+  ```
 
 
 
