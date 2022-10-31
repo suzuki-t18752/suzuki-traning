@@ -1,8 +1,8 @@
 # suzuki-traning
-
 - 作業時のメモや調べたことを記入しています
-- メインはvirtualboxでの環境構築
-## virtualboxを使った仮想環境構築
+
+## Linux
+### virtualboxを使った仮想環境構築
 - centOS(linux)
 - iptables
 - apache
@@ -12,6 +12,8 @@
   - wordpress
 - varnish
 
-## シェルスクリプトにて環境構築の自動化
+### シェルスクリプトにて環境構築の自動化
 
-##
+## Ruby
+## Typescript
+## Other
