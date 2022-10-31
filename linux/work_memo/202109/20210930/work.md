@@ -13,7 +13,7 @@ apt update
 
 apt upgrade
 
-ssh-keygen -t rsa -b 4096 -C "tkft.psy@gmail.com"
+ssh-keygen -t rsa -b 4096 -C "自分のメールアドレス"
 
 ssh -T git@github.com
 The authenticity of host 'github.com (52.69.186.44)' can't be established.
@@ -22,8 +22,8 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 Warning: Permanently added 'github.com,52.69.186.44' (RSA) to the list of known hosts.
 Hi suzuki-t18752! You've successfully authenticated, but GitHub does not provide shell access.
 
-git config --global user.email "suzukit@suzuki.jp" 
-git config --global user.name "suzuki" 
+git config --global user.email "suzukit@suzuki.jp"
+git config --global user.name "suzuki"
 
 
 ### mntディレクトリにcドライブがある
@@ -225,7 +225,7 @@ apt update
 
 apt upgrade
 
-ssh-keygen -t rsa -b 4096 -C "tkft.psy@gmail.com"
+ssh-keygen -t rsa -b 4096 -C "自分のメールアドレス"
 
 ssh -T git@github.com
 The authenticity of host 'github.com (52.69.186.44)' can't be established.
@@ -234,8 +234,8 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 Warning: Permanently added 'github.com,52.69.186.44' (RSA) to the list of known hosts.
 Hi suzuki-t18752! You've successfully authenticated, but GitHub does not provide shell access.
 
-git config --global user.email "suzukit@suzuki.jp" 
-git config --global user.name "suzuki" 
+git config --global user.email "suzukit@suzuki.jp"
+git config --global user.name "suzuki"
 
 
 ### mntディレクトリにcドライブがある
