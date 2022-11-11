@@ -697,11 +697,35 @@ console.log(object1 == object2);
 => false
 ```
 
+- オブジェクトリテラル (object literal)
+  - オブジェクトリテラル{}という記法を用いて、簡単にオブジェクトを生成できる
+  ```
+  // 空っぽのオブジェクトを生成
+  const object = {};
 
+  // プロパティを指定しながらオブジェクトを生成
+  const person = { name: "Bob", age: 25 };
+  ```
+  - Objectをnewすることでオブジェクトを生成
+  ```
+  const person = new Object();
+  person.name = "Bob";
+  person.age = 25;
+  ```
+  - JavaScriptではJSONをそのままオブジェクトリテラルとして解釈出来る
 
-
-
-
+- オブジェクトのプロパティ
+  - オブジェクトは、プロパティの集合体でキーと値の対になっている
+  ```
+  const product = {
+    name: "ミネラルウォーター",
+    price: 100,
+    getTaxIncludedPrice: function () {
+      return Math.floor(this.price * 1.1);
+    },
+    shomikigen: new Date("2022-01-20"),
+  };
+  ```
 
 
 
