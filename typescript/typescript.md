@@ -727,9 +727,34 @@ console.log(object1 == object2);
   };
   ```
 
+- オブジェクトの型注釈 (type annotation)
+```
+let box: { width: number; height: number };
+//       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^型注釈
+box = { width: 1080, height: 720 };
+```
+  - プロパティの区切り文字には、オブジェクトリテラルのようにカンマ「,」も使えるが、セミコロン「;」を用いるほうを推奨される
+    - 理由は、コード整形ツールPrettierがオブジェクト型注釈を直すとき、カンマをセミコロンに置き換えるため
+    ```
+    let box: { // 型宣言時はセミコロン
+      width: number;
+      height: number;
+    };
+    box = { width: 1080, height: 720 };
+    ```
+  - メソッドの型注釈
+    - 引数と戻り値の型注釈
+    ```
+    let calculator: {
+      sum(x: number, y: number): number;
+    };
 
-
-
+    calculator = {
+      sum(x, y) {
+        return x + y;
+      },
+    };
+    ```
 
 
 
