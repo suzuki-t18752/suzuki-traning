@@ -755,9 +755,39 @@ box = { width: 1080, height: 720 };
       },
     };
     ```
-
-
-
-
+- オブジェクトの型推論
+  - オブジェクトの値を変数宣言で代入する場合、型注釈を省略でき、値から型が自動的に判別される
+  ```
+  let box = { width: 1080, height: 720 };
+       ↑
+    let box: {
+        width: number;
+        height: number;
+    }
+   ```
+- `Record<Keys, Type>`
+  - 連想配列のようなキーバリューのオブジェクト型を定義する場合この方法もある
+  ```
+  let foo: Record<string, number>;
+  foo = { a: 1, b: 2 };
+  ```
+- object型
+  - オブジェクトの型注釈にはobject型を用いることもできる
+  ```
+  let box: object;
+  box = { width: 1080, height: 720 };
+  ```
+  - しかし推奨されない
+    - object型には何のプロパティがあるかの情報がないため
+    ```
+    参照するとコンパイルエラーになる
+    box.width;
+    Property 'width' does not exist on type 'object'.
+    ```
+    - 第2の理由はどんなオブジェクトでも代入でき、期待しない値も代入できてしまうから
+    ```
+    let box: object;
+    box = { wtdih: 1080, hihget: 720 }; // スペルミス
+    ```
 
   
