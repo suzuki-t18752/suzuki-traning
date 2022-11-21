@@ -860,10 +860,17 @@ box = { width: 1080, height: 720 };
     obj = { x: 2 }; // 許可される
     ```
     
-    
-    
-    
-    
-    
+- オブジェクト型のオプションプロパティ (optional property)
+  - オブジェクトプロパティのオプショナルを型付けするには、プロパティ名の後ろに`?`を書く
+  ```
+  let size: { width?: number };
+  //オプションプロパティを持ったオブジェクト型には、そのオプションプロパティを持たないオブジェクトを代入できる
+  size = {}; // OK
+  //また、オプションプロパティの値がundefinedのオブジェクトも代入可能
+  size = { width: undefined }; // OK
+  //しかし、オプションプロパティの値がnullの場合は代入できない
+  size = { width: null };
+  Type 'null' is not assignable to type 'number | undefined'.
+  ```
   
   
