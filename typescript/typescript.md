@@ -790,4 +790,80 @@ box = { width: 1080, height: 720 };
     box = { wtdih: 1080, hihget: 720 }; // スペルミス
     ```
 
+- readonlyプロパティ
+  - TypeScriptでは、オブジェクトのプロパティを読み取り専用にすることができる
+    - 読み取り専用にしたいプロパティにはreadonly修飾子をつける
+    - 読み取り専用のプロパティに値を代入しようとすると、TypeScriptコンパイラーが代入不可の旨を警告する
+    ```
+    let obj: {
+      readonly foo: number;
+    };
+    obj = { foo: 1 };
+    obj.foo = 2;
+    Cannot assign to 'foo' because it is a read-only property.
+    ```
+  - readonlyは再帰的ではない
+    - プロパティが読み取り専用になるだけでオブジェクトまでは読み取り専用にはならない
+    ```
+    let obj: {
+      readonly foo: {
+        bar: number;
+      };
+    };
+    obj = {
+      foo: {
+        bar: 1,
+      },
+    };
+    obj.foo = { bar: 2 };
+    Cannot assign to 'foo' because it is a read-only property.
+    obj.foo.bar = 2; // コンパイルエラーにはならない
+    ```
+    - 再帰的にプロパティを読み取り専用にしたい場合は、子や孫の各プロパティにreadonlyをつけていく必要がある
+    ```
+    let obj: {
+      readonly foo: {
+        readonly bar: number;
+      };
+    };
+    ```
+  - readonlyはコンパイル時のみ
+    - readonlyはTypeScriptの型の世界だけの概念なのでコンパイルされた後のJavaScriptとしては、readonlyがついていたプロパティも代入可能になる
+  - すべてのプロパティを一括して読み取り専用にする方法
+    - ユーティリティ型のReadonlyを使う
+    ```
+    let obj: Readonly<{
+      a: number;
+      b: number;
+      c: number;
+      d: number;
+      e: number;
+      f: number;
+    }>;
+    ```
+- readonlyとconstの違い
+  - constは変数への代入を禁止にするもの
+    - constの代入禁止が効くのは変数そのものへの代入だけ、変数がオブジェクトだった場合、プロパティへの代入は許可される
+    ```
+    const x = { y: 1 };
+    x = { y: 2 }; // 変数そのものへの代入は不可
+    Cannot assign to 'x' because it is a constant.
+    x.y = 2; // プロパティへの代入は許可
+    ```
+  - readonlyはプロパティへの代入を禁止にするもの
+    - readonlyがついたプロパティxに値を代入しようとすると、コンパイルエラーになるが、変数自体への代入は許可される
+    ```
+    let obj: { readonly x: number } = { x: 1 };
+    obj.x = 2;
+    Cannot assign to 'x' because it is a read-only property.
+    let obj: { readonly x: number } = { x: 1 };
+    obj = { x: 2 }; // 許可される
+    ```
+    
+    
+    
+    
+    
+    
+  
   
