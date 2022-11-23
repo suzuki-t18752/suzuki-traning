@@ -873,4 +873,30 @@ box = { width: 1080, height: 720 };
   Type 'null' is not assignable to type 'number | undefined'.
   ```
   
+- 余剰プロパティチェック (excess property checking)
+  - TypeScriptのオブジェクト型には余剰プロパティチェックという追加のチェックが働く場合がある
+    - オブジェクト型に存在しないプロパティを持つオブジェクトの代入を禁止する検査
+    ```
+    let onlyX: { x: number };
+    onlyX = { x: 1 }; // OK
+    onlyX = { x: 1, y: 2 }; // コンパイルエラー
+    Type '{ x: number; y: number; }' is not assignable to type '{ x: number; }'.
+      Object literal may only specify known properties, and 'y' does not exist in type '{ x: number; }'.
+    ```
+ 
+- インデックス型 (index signature)
+  - オブジェクトのフィールド名をあえて指定せず、プロパティのみを指定したい場合に使う
+  ```
+  let obj: {
+    [K: string]: number;
+  };
+  ```
+  - フィールド名の表現部分が[K: string]、このKの部分は型変数(Kやkeyにするのが一般的)
+  - stringの部分はフィールド名の型、インデックス型のフィールド名の型はstring、number、symbolのみが指定可能
+  ```
+  let a: { b: number}
+  a = {b: 1, c: 2} //NG
+  let d: { [K: number]: number; }
+  d =  {1: 2, 3: 2} //OK
+  ```
   
