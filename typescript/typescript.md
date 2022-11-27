@@ -899,4 +899,51 @@ box = { width: 1080, height: 720 };
   let d: { [K: number]: number; }
   d =  {1: 2, 3: 2} //OK
   ```
-  
+
+### プロトタイプベース
+- オブジェクト生成方法の1つ(javascriptで使われる)
+  - 他にクラスベースがある(phpやjava)
+    - オブジェクトの素となるものはクラスなのがクラスベース
+- オブジェクトを素にして新しいオブジェクトを生成する
+  - 「プロトタイプ」とは日本語では「原型」のことでプロトタイプベースは型となるオブジェクトを素にオブジェクトを生成するアプローチ
+```
+たとえば、JavaScriptでは既存のオブジェクトに対して、Object.create()を実行すると新しいオブジェクトが得られる
+const button = {
+  name: "ボタン",
+};
+ 
+const dangerousButton = Object.create(button);
+dangerousButton.name = "絶対に押すなよ？";
+
+上の例のbuttonとdangerousButtonは異なるオブジェクト
+console.log(button.name);
+=> "ボタン"
+console.log(dangerousButton.name);
+=> "絶対に押すなよ？"
+```
+- 継承
+```
+const counter = {
+  count: 0,
+  countUp() {
+    this.count++;
+  },
+};
+ 
+const resettableCounter = Object.create(counter);
+resettableCounter.reset = function () {
+  this.count = 0;
+};
+```
+
+
+
+
+
+
+
+
+
+
+
+
