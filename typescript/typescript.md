@@ -900,6 +900,49 @@ box = { width: 1080, height: 720 };
   d =  {1: 2, 3: 2} //OK
   ```
 
+- object型、Object型、{}型の違い
+  - object型
+    - object型はオブジェクト型の値だけが代入できる型、プリミティブ型が代入できない型
+    ```
+    let a: object;
+    a = { x: 1 }; // OK
+    a = [1, 2, 3]; // OK。配列はオブジェクト
+    a = /a-z/; // OK。正規表現はオブジェクト
+
+    // プリミティブ型はNG
+    a = 1;
+    => Type 'number' is not assignable to type 'object'.
+    a = true;
+    => Type 'boolean' is not assignable to type 'object'.
+    a = "string";
+    => Type 'string' is not assignable to type 'object'.
+    ```
+  - Object型
+    - Object型はインターフェース
+      - nullやundefinedを除くあらゆるプリミティブ型も代入できる
+      ```
+      let a: Object;
+      a = {}; // OK
+
+      // ボックス化可能なプリミティブ型OK
+      a = 1; // OK
+      a = true; // OK
+      a = "string"; // OK
+
+      // nullとundefinedはNG
+      a = null;
+      Type 'null' is not assignable to type 'Object'.
+      a = undefined;
+      Type 'undefined' is not assignable to type 'Object'.
+      ```
+    - TypeScriptでは使うべきではない
+      - 理由 `https://www.typescriptlang.org/docs/handbook/declaration-files/do-s-and-don-ts.html#number-string-boolean-symbol-and-object`
+      - プリミティブ型も代入できてしまうため
+  - {}型
+    - プロパティを持たないオブジェクトを表す型
+    - Object型と似ていて、nullやundefinedを除くあらゆる型を代入可能
+
+
 ### プロトタイプベース
 - オブジェクト生成方法の1つ(javascriptで使われる)
   - 他にクラスベースがある(phpやjava)
