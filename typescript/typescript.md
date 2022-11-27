@@ -1016,8 +1016,168 @@ box = { width: 1080, height: 720 };
     => 0
     ```
    
+- オプショナルチェーン (optional chaining)
+  - オプショナルチェーン`?.`は、オブジェクトのプロパティが存在しない場合でも、エラーを起こさずにプロパティを参照できる
+  ```
+  const book = undefined;
+  const title = book.title;
+  TypeError: Cannot read property 'title' of undefined
+  
+  const author = null;
+  const email = author.email;
+  TypeError: Cannot read property 'email' of null
+  
+  // エラーを避けるには、値がnullやundefinedでないかチェックする必要がある
+  const book = undefined;
+  const title = book === null || book === undefined ? undefined : book.title;
+  console.log(title);
+  => undefined
 
+  const book = { title: "サバイバルTypeScript" };
+  const title = book === null || book === undefined ? undefined : book.title;
+  console.log(title);
+  => "サバイバルTypeScript"
+  
+  // オプショナルチェーン
+  const book = undefined;
+  const title = book?.title;
+  //                ^^オプショナルチェーン
+  console.log(title);
+  => undefined
 
+  const book = { title: "サバイバルTypeScript" };
+  const title = book?.title;
+  console.log(title);
+  => "サバイバルTypeScript"
+  
+  //関数を呼ぶとき
+  // 引数カッコの前に?.を書く
+  const increment = undefined;
+  const result = increment?.(1);
+  console.log(result);
+  => undefined
+
+  const increment = (n) => n + 1;
+  const result = increment?.(1);
+  console.log(result);
+  => 2
+  
+  // 配列要素を参照する時
+  // カギカッコの前に?.を書く
+  const books = undefined;
+  const title = books?.[0];
+  console.log(title);
+  => undefined
+
+  const books = ["サバイバルTypeScript"];
+  const title = books?.[0];
+  console.log(title);
+  => "サバイバルTypeScript"
+  ```
+  - TypeScriptでの型
+    - TypeScriptでオプショナルチェーンを使った場合、得られる値の型は、最後のプロパティの型とundefinedのユニオン型になる
+  - コンパイルの結果
+    - TypeScriptのコンパイラーオプションtargetがes2020以上のときは、オプショナルチェーンはそのままJavaScriptにコンパイルされる
+    ```
+    const title = book?.title;
+    ```
+    - targetがes2019以前の場合は、次のような三項演算子を用いたコードにコンパイルされる
+    ```
+    const title = book === null || book === void 0 ? void 0 : book.title;
+    ```
+  - Null合体演算子と組み合わせる
+    - オプショナルチェーンがundefinedを返したときに、デフォルト値を代入したい場合があるが、Null合体演算子`??`を用いると便利
+    ```
+    const book = undefined;
+    const title = book?.title ?? "デフォルトタイトル";
+    console.log(title);
+    => "デフォルトタイトル"
+    ```
+    
+- オブジェクトをループする
+  - for-in文
+  ```
+  const foo = { a: 1, b: 2, c: 3 };
+  for (const prop in foo) {
+    console.log(prop, foo[prop]);
+    // a 1
+    // b 2
+    // c 3 の順で出力される
+  }
+  - for-in文ではhasOwnPropertyを使おう
+    - Object.prototypeを変更するとその影響は、このプロトタイプを持つすべてのオブジェクトに影響
+    ```
+    const foo = { a: 1 };
+    const date = new Date();
+    const arr = [1, 2, 3];
+
+    // どのオブジェクトもhiプロパティが無いことを確認
+    console.log(foo.hi, date.hi, arr.hi);
+    undefined undefined undefined
+
+    // プロトタイプにプロパティを追加する
+    Object.prototype.hi = "Hi!";
+
+    // どのオブジェクトもhiプロパティを持つようになる
+    console.log(foo.hi, date.hi, arr.hi);
+    => Hi! Hi! Hi!
+
+    // for-in文はプロトタイプのプロパティも含めてループする仕様がありプロトタイプが変更されると、意図しないところでfor-inのループ回数が変わることがある
+    const foo = { a: 1, b: 2, c: 3 };
+    Object.prototype.hi = "Hi!";
+    for (const prop in foo) {
+      console.log(prop, foo[prop]);
+      // a 1
+      // b 2
+      // c 3
+      // hi Hi! の順で出力される
+    }
+
+    // for-inで反復処理を書く場合は、hasOwnPropertyでプロパティがプロトタイプのものでないことをチェックしたほうが安全
+    const foo = { a: 1, b: 2, c: 3 };
+    Object.prototype.hi = "Hi!";
+    for (const prop in foo) {
+      if (Object.prototype.hasOwnProperty.call(foo, prop)) {
+        console.log(prop, foo[prop]);
+        // a 1
+        // b 2
+        // c 3  の順で出力される
+      }
+    }
+    ```
+  - Object.entries
+    - for-in文と異なり、hasOwnPropertyのチェックが不要
+    ```
+    const foo = { a: 1, b: 2, c: 3 };
+    for (const [key, value] of Object.entries(foo)) {
+      console.log(key, value);
+      // a 1
+      // b 2
+      // c 3 の順で出力される
+    }
+    ```
+  - Object.keys
+    - プロパティのキーだけを反復処理する場合
+    ```
+    const foo = { a: 1, b: 2, c: 3 };
+    for (const key of Object.keys(foo)) {
+      console.log(key);
+      // a
+      // b
+      // c の順で出力される
+    }
+    ```
+  - Object.values
+    - プロパティの値だけを反復処理する場合
+    ```
+    const foo = { a: 1, b: 2, c: 3 };
+    for (const value of Object.values(foo)) {
+      console.log(value);
+      // 1
+      // 2
+      // 3 の順で出力される
+    }
+    ```
 
 
 ### プロトタイプベース
