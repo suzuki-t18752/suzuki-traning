@@ -942,6 +942,83 @@ box = { width: 1080, height: 720 };
     - プロパティを持たないオブジェクトを表す型
     - Object型と似ていて、nullやundefinedを除くあらゆる型を代入可能
 
+- オブジェクトの分割代入 (destructuring assignment)
+  - 分割代入は、オブジェクトからプロパティを取り出す機能
+    - 通常、オブジェクトからプロパティを取り出す場合は、プロパティアクセサーを使う
+    ```
+    const item = { price: 100 };
+    const price = item.price; // プロパティアクセサー
+    ```
+    - 分割代入は、中カッコ{}に取り出したいプロパティを指定することで、プロパティ名と同じ名前の変数が作れる
+    ```
+    const item = { price: 100 };
+    const { price } = item; // item.priceを取り出している
+    
+    // 複数を取り出す場合
+    const obj = { a: 1, b: 2 };
+    const { a, b } = obj;
+    
+    // 代入する変数名の指定
+    // オブジェクトの分割代入では、コロン:のあとに変数名を指定すると、その名前の変数に代入できる
+    const color = { r: 0, g: 122, b: 204, a: 1 };
+    const { r: red, g: green, b: blue, a: alpha } = color;
+    console.log(green);
+    => 122
+    
+    // 深い階層のプロパティを取り出すには、階層の分だけ中カッコで囲む
+    const continent = {
+      name: "北アメリカ",
+      us: {
+        name: "アメリカ合衆国",
+        capitalCity: "ワシントンD.C.",
+      },
+    };
+    
+    //通常
+    const {
+      us: { name, capitalCity },
+    } = continent;
+    
+    console.log(name);
+    => "アメリカ合衆国"
+    console.log(capitalCity);
+    => "ワシントンD.C."
+    
+    // 変数名指定
+    const {
+      name: continentName,
+      us: { name: countryName },
+    } = continent;
+    
+    console.log(continentName);
+    => "北アメリカ"
+    console.log(countryName);
+    => "アメリカ合衆国"
+    ```
+  - 分割代入のデフォルト値
+    - 分割代入では、=のあとにデフォルト値が指定でき、デフォルト値は値がundefinedのときに代入される
+    ```
+    const color = { r: undefined, g: 122, b: 204 };
+    const { r = 0, g = 0, b = 0 } = color;
+    console.log(r, g, b);
+    => 0,  122,  204
+    
+    // 値がnullのときは、デフォルト値が使われず、nullが入る
+    const color = { r: null };
+    const { r = 0 } = color;
+    console.log(r);
+    => null
+    
+    // デフォルト値と変数名の指定
+    const color = { r: undefined, g: 122, b: 204 };
+    const { r: red = 0 } = color;
+    console.log(red);
+    => 0
+    ```
+   
+
+
+
 
 ### プロトタイプベース
 - オブジェクト生成方法の1つ(javascriptで使われる)
