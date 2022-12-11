@@ -1216,9 +1216,73 @@ resettableCounter.reset = function () {
 };
 ```
 
+### 配列リテラル(array literal)
+```
+[1, 2, 3];
+```
+- 配列の型注釈(type annotation)
+  - 2つの方法がある
+    - `Type[]`
+      - 1つ目の型注釈は、要素の型の後ろに`[]`をつける書き方
+      ```
+      let array: number[];
+      array = [1, 2, 3];
+      ```
+    - `Array<T>`
+      - Tには要素の型を書く
+      ```
+      let array: Array<number>;
+      array = [1, 2, 3];
+      ```
+    - 2種類の違いは書き方がちがうだけ、コンパイラのチェックの内容はどちらも同じ
+      - どちらの書き方を選ぶかは、書き手の好み、プロジェクトとしてはどちらの書き方にするか
+
+- 配列はオブジェクト
+  - JavaScriptの配列はオブジェクトであるため、配列の中身が同じでも、オブジェクトのインスタンスが異なると`==`では期待する比較ができない
+  ```
+  const list1 = [1, 2, 3];
+  const list2 = [1, 2, 3];
+  console.log(list1 == list2);
+  => false
+  ```
+  - 配列の中身を比べるための演算子やメソッドはJavaScriptにはないため、中身を比較したいときにはlodashのisEqualなどのパッケージを使うと良い
 
 
-
+- 配列要素へのアクセス
+  - JavaScriptでの配列要素アクセス
+    - 配列の要素にアクセスするにはブラケット`[]`を使う
+    ```
+    const abc = ["a", "b", "c"];
+    console.log(abc[0]);
+    => "a"
+    ```
+    - JavaScriptの配列では、存在しないインデックス番号でもアクセス可能
+    ```
+    const abc = ["a", "b", "c"];
+    console.log(abc[100]);
+    => undefined
+    ```
+  - Typescriptでは
+    - `Type[]`型の配列から要素を取り出したとき、その値の型はTypeになる
+    ```
+    const abc: string[] = ["a", "b", "c"];
+    const character: string = abc[0];
+    ```
+    - TypeScriptでも不在要素へのアクセスについて、コンパイラーが警告することはない
+    ```
+    const abc = ["a", "b", "c"];
+    const character: string = abc[100]; // エラーにはならない
+    => undefine
+    ```
+      - 要素アクセスで得た値はstringとundefinedどちらの可能性もありながら、TypeScriptは常にstring型であると考え、JavaScript実行時に判明する
+      ```
+      const abc = ["a", "b", "c"];
+      const character: string = abc[100];
+      console.log(character);
+      undefined
+      character.toUpperCase();
+      Cannot read properties of undefined (reading 'toUpperCase')
+      ```
 
 
 
