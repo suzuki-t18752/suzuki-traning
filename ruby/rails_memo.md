@@ -51,3 +51,13 @@
     end
   end
   ```
+
+### リレーションテーブルもまとめて作成する
+```
+下記のように関係テーブルを属性に指定すること
+Review.create!(
+  id: 1,
+  review_id: '1',
+  review_receptions: [ReviewReception.new(reception_type: 'dinner'), ReviewReception.new(reception_type: 'etc')]
+)
+```
