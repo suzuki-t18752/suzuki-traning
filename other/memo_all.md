@@ -11,7 +11,14 @@
         "tab.activeBackground": "#8b8b8b",
         "tab.activeForeground": "#1d1d20",
         "tab.inactiveForeground": "#848490",
-    }
+    },
+    "workbench.editorAssociations": {
+        "*.log": "default",
+        "*.pdf": "default"
+    },
+    "workbench.editor.untitled.hint": "hidden",
+    "editor.accessibilitySupport": "off",
+    "code-eol.crlfCharacter": ""
 }
 ```
 ## iptables
