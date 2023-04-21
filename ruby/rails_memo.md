@@ -26,6 +26,23 @@
   - nilを許容するかどうか
   - デフォルトはfalseでnilを許容しない
 
+### 外部結合
+```
+Model.left_joins(:join_table)
+
+結合先の検索
+Model.left_joins(:join_table).where(join_table: { id: 1 })
+```
+
+### OR検索
+```
+Modelモデルのidが1もしくはnilのものを検索できる(SELECT * FROM models WHERE id = 1 OR id IS NULL)
+Model.where(id: 1).or(Model.where(id: nil))
+
+結合をしている場合(Modelのidが1もしくはJoinTableのidが1のものを検索)
+Model.left_joins(:join_table).where(id: 1).or(JoinTable.where(id: 1))
+```
+
 ## ActiveRecord
 - ActiveRecordの変更を行った際にmodelの確認を忘れないように
 - DBの中身によっては変更を行えないこともあるので確認を忘れない
