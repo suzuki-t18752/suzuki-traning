@@ -6,9 +6,10 @@
   "editor.tabSize": 2,
   "workbench.editor.wrapTabs": true,
   "workbench.colorCustomizations": {
-      "tab.activeBackground": "#8b8b8b",
+      "tab.activeBackground": "#728781",
       "tab.activeForeground": "#1d1d20",
-      "tab.inactiveForeground": "#848490",
+      "tab.inactiveForeground": "#95959a",
+      "tab.hoverBackground": "#08551f"
   },
   "workbench.editorAssociations": {
       "*.log": "default",
