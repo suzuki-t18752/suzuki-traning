@@ -1154,9 +1154,41 @@
   => "1,2,3"
   ```
 
+- 並列処理
+```
+[3] pry(main)> 5.times.map {|n| Thread.new { a.test } }
+=> [#<Thread:0x00007f579a151050 (pry):3 run>,
+ #<Thread:0x00007f579a150e98 (pry):3 run>,
+ #<Thread:0x00007f579a150d80 (pry):3 run>,
+ #<Thread:0x00007f579a150c18 (pry):3 run>,
+ #<Thread:0x00007f579a150b28 (pry):3 run>]
+[4] pry(main)> DEBUG    2023-06-15T11:14:51+09:00       application     reqid:nil       rid:nil uid:nil aid:nil
+      Test Load (2.2ms)  SELECT `test`.* FROM `test` ORDER BY `test`.`id` ASC LIMIT 1
+DEBUG   2023-06-15T11:14:51+09:00       application     reqid:nil       rid:nil uid:nil aid:nil
+      Test Load (1.9ms)  SELECT `test`.* FROM `test` ORDER BY `test`.`id` ASC LIMIT 1
+DEBUG   2023-06-15T11:14:51+09:00       application     reqid:nil       rid:nil uid:nil aid:nil
+      Test Load (2.4ms)  SELECT `test`.* FROM `test` ORDER BY `test`.`id` ASC LIMIT 1
+DEBUG   2023-06-15T11:14:51+09:00       application     reqid:nil       rid:nil uid:nil aid:nil
+      Test Load (1.4ms)  SELECT `test`.* FROM `test` ORDER BY `test`.`id` ASC LIMIT 1
+DEBUG   2023-06-15T11:14:51+09:00       application     reqid:nil       rid:nil uid:nil aid:nil
+      Test Load (1.3ms)  SELECT `test`.* FROM `test` ORDER BY `test`.`id` ASC LIMIT 1
 
+[1] pry(main)> a = A.new
+DEBUG   2023-06-15T11:16:04+09:00       application     reqid:nil       rid:nil uid:nil aid:nil
+      Test Load (1.4ms)  SELECT `test`.* FROM `test` ORDER BY `test`.`id` ASC LIMIT 1
+=> #<A:0x00007f579a110938 @test=1>
+[2] pry(main)> 5.times.map {|n| Thread.new { a.test } }
+=> [#<Thread:0x00007f579930ff28 (pry):2 run>,
+ #<Thread:0x00007f579930fa78 (pry):2 run>,
+ #<Thread:0x00007f579930f848 (pry):2 run>,
+ #<Thread:0x00007f579930f550 (pry):2 run>,
+ #<Thread:0x00007f579930f258 (pry):2 run>]
+```
 
-
+- メソッドの定義元を確認
+```
+method(:メソッド名).owner
+```
 
 - クラスの持っているメソッドを確認
   - クラスのメソッド一覧

@@ -380,6 +380,11 @@ puttyとubuntuで違うので注意
 その後プルリクエストを画面にて行い、mainへマージをかけて更新する。
 複数人にて作業を行う場合はマージの際に他の作業者の差分をフェッチやプル等で取り込んでくる必要がある(コンフリクト)
 
+- 分岐元ブランチを確認
+```
+git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}'
+```
+
 ## yum groupinstall "Development Tools"
 
 [Development Tools](https://qiita.com/old_/items/6f9da09b9af795c11b71)

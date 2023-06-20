@@ -6,7 +6,7 @@
   "editor.tabSize": 2,
   "workbench.editor.wrapTabs": true,
   "workbench.colorCustomizations": {
-      "tab.activeBackground": "#728781",
+      "tab.activeBackground": "#3b544d",
       "tab.activeForeground": "#1d1d20",
       "tab.inactiveForeground": "#95959a",
       "tab.hoverBackground": "#08551f"
