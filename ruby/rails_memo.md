@@ -71,7 +71,7 @@ Model.left_joins(:join_table).where(id: 1).or(JoinTable.where(id: 1))
 - indexの定義
   - nameは基本なしで良い、デフォルトで勝手に設定してくれる
   ```
-  add_index :gbp_reviews, :name, unique: true, name: 'uidx_gbp_reviews'
+  add_index :gg_upload_images, :name, unique: true, name: 'uidx_gg_upload_images'
   ```
 
 ### リレーションテーブルもまとめて作成する
