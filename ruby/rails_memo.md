@@ -68,6 +68,11 @@ Model.left_joins(:join_table).where(id: 1).or(JoinTable.where(id: 1))
     end
   end
   ```
+- indexの定義
+  - nameは基本なしで良い、デフォルトで勝手に設定してくれる
+  ```
+  add_index :gbp_reviews, :name, unique: true, name: 'uidx_gbp_reviews'
+  ```
 
 ### リレーションテーブルもまとめて作成する
 ```
