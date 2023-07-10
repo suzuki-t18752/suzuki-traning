@@ -385,6 +385,27 @@ puttyとubuntuで違うので注意
 git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}'
 ```
 
+```
+-  リモートを含め全てのブランチを確認する
+git branch -a
+
+- リモートのブランチをローカルに取り込む
+git checkout リモートのブランチ名
+
+- 取り込み後に"detached HEAD ~~~~~~"の表示がある場合下記コマンドでブランチ名を指定する必要がある
+git branch 任意のブランチ名
+```
+-  git merge
+  - 指定したブランチの変更を取り込む
+    - 取り込み元のブランチは消えない
+```
+git merge 取り込みたいブランチ名
+
+$ git merge test_20220511
+Merge made by the 'recursive' strategy.
+ app/views/s.html.erb    | 15 +++++++++++++++
+ config/c.rb             | 10 ++++++++--
+```
 ## yum groupinstall "Development Tools"
 
 [Development Tools](https://qiita.com/old_/items/6f9da09b9af795c11b71)
@@ -469,6 +490,59 @@ WebサーバとWebブラウザなどの間で利用者の認証を行う方式�
 
 ### mysql_ssl_rsa_setup
 SSLを使用した安全な接続と、暗号化されていない接続を介したRSAを使用した安全なパスワード交換をサポートするために必要なSSL証明書とキーファイル、およびRSAキーペアファイルを作成する
+
+### [mysql EXPLAIN(INDEXの確認)](https://dev.mysql.com/doc/refman/8.0/ja/explain.html)
+- https://qiita.com/tsurumiii/items/0b70f1a1ee0499be2002
+- 例
+```
+EXPLAIN SELECT * FROM users WHERE id = 1
+```
+```
+結果
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | users | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL  |
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+```
+
+- id 実行順序
+- select_type
+  - SIMPLE: 単純な SELECT (UNION やサブクエリーを使用しません)
+  - PRIMARY: もっとも外側の SELECT
+  - UNION: UNION 内の 2 つめ以降の SELECT ステートメント
+  - DEPENDENT: UNION 内の 2 つめ以降の SELECT ステートメントで、外側のクエリーに依存します
+  - UNION RESULT: UNION の結果。
+  - SUBQUERY: サブクエリー内の最初の SELECT
+  - DEPENDENT SUBQUERY: サブクエリー内の最初の SELECT で、外側のクエリーに依存します
+  - DERIVED: 派生テーブル SELECT (FROM 句内のサブクエリー)
+  - MATERIALIZED: 実体化されたサブクエリー
+  - UNCACHEABLE SUBQUERY: 結果をキャッシュできず、外側のクエリーの行ごとに再評価される必要があるサブクエリー
+  - UNCACHEABLE UNION: キャッシュ不可能なサブクエリーに属する UNION 内の 2 つめ以降の SELECT
+- table	対象テーブル
+- partitions	テーブルパーティション
+- type
+  - system: テーブルに1行しかない
+  - const: プライマリキー、ユニークキーのルックアップによるアクセス
+  - eq_ref: joinにおいてのconstと同義
+  - ref: constでないインデックスを使って等価検索
+  - range: indexを用いた範囲検索
+  - index: フルインデックススキャン
+  - ALL: フルテーブルスキャン
+  - fulltext: FULLTEXTインデックスによる検索
+  - ref_or_null: refに追加でNULL値でも検索する
+  - index_merge: インデックスマージ最適化を使用
+  - unique_subquery: 効率化のため、サブクエリーを完全に置き換える単なるインデックスルックアップ関数
+  - index_subquery: 働きは、unique_subqueryと同様。サブクエリー内の一意でないインデックスに対して機能する
+- possible_keys	optimizerがテーブルのアクセスに利用可能だと判断したインデックス
+- key	実際にoptimizerによって使用されたキー
+- key_len	選択されたキーの長さ
+- ref
+  - 定数の場合: const
+  - JOINを使用している場合: 結合する相手側のテーブルで検索条件として利用されているカラムが表示される
+- rows	対象テーブルから取得される行の見積もり
+- filtered	テーブル条件によってフィルタ処理される行の推定の割合
+- Extra	optimizerがどのような戦略を立てたかを知ることが出来る
 
 ### Require all granted [参考](https://www.javadrive.jp/apache/allow/index1.html)
 ディレクトリのアクセス制限を設定していてこの場合は全て許可する設定
@@ -623,3 +697,35 @@ curl -X POST -H "Content-Type: application/json" -d '{"rsv_id":"1"}' http://loca
 
 ## Plig and Play
 - 周辺機器をコンピューターに接続(plug)した時にコンピューターの基本ソフトが自動的に設定を行い、すぐに使える(play)ようにしてくれる機能またはその規格
+
+## カプセル化
+  - https://webpia.jp/encapsulation/
+  - 外部から中身が見えない
+  - 中身を意識しなくても使える
+  - 情報を直接操作することをできなくして情報が壊れてしまうことを防止する
+  - オブジェクト自身に適切な情報操作を委ねる
+## ポリモーフィズム(多様性)
+  - https://webpia.jp/polymorphism/
+  - 中に入るものによって同じ関数でも違う処理を行える
+  - 例
+    - 設定
+      - 動物のクラスがあり、それぞれ鳴き声を持っている
+      - 犬 → ワン
+      - 猫 → にゃー
+    - ポリモーフィズムを利用しない場合
+      - それぞれのクラスを直接呼び出し、鳴き声を取得することになる
+        - 犬.鳴き声
+        - 猫.鳴き声
+    - ポリモーフィズムを利用すると
+      - 動物の鳴き声を返すメソッドを作る
+        - どの動物?かの部分だけ設定してあげればこの鳴き声が返ってくるよねという実装がされている
+      - 鳴き声(犬) → ワン
+      - 鳴き声(猫) → にゃー
+
+## デベロッパーツールのパフォーマンスタブで処理時間の計測を行う
+1. パフォーマンスタブを開く
+2. 左上の黒丸(レコーディングボタン)を押下する
+3. 処理を画面を操作して行う
+4. 処理が終了したらstopボタンを押下する
+5. 確認したい処理の範囲を選択する(画面の遷移状態が表示されているので目的の画面状態を範囲選択する)
+  - さらにnetwork欄を開くことでAPIの処理時間を分かる

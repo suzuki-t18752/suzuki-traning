@@ -1,4 +1,16 @@
 # railsのメモ
+
+## 新規テーブル作成
+```
+rails g model モデル名
+rails g model Test
+```
+- マイグレーションファイルの編集
+- モデルファイルの編集
+- localeの定義
+- specモデルテストファイルの作成
+- factorybotファイルの作成
+
 ## 日付の計算
 ```
 [1] pry(main)> Time.now + 1.day
@@ -48,6 +60,26 @@ Model.left_joins(:join_table).where(id: 1).or(JoinTable.where(id: 1))
 - DBの中身によっては変更を行えないこともあるので確認を忘れない
   - 例: そのカラムにnullが入っているにも関わらずnot null制約を入れようとした場合
     - 予めそのカラムがnullでないようにそのレコードを削除したり、値を入れるようにする
+## active record associations
+- https://railsguides.jp/association_basics.html
+
+- belongs_to
+  - 指定したテーブルのキーを持っている
+
+- has_one
+  - 指定したテーブルと対一の関係
+
+- has_many
+  - 指定したテーブルと対多の関係
+  - テーブル名を複数系で指定する
+
+- カラム名に関連テーブルとは別名を指定していた場合
+- optional
+  - 外部キーにnilを入力する場合
+  ```
+  belongs_to :test_user, class_name: 'User', optional: true
+  ```
+
 ### 外部キー制約
 - on_delete
   - nullify
@@ -55,6 +87,9 @@ Model.left_joins(:join_table).where(id: 1).or(JoinTable.where(id: 1))
   - cascade
     - 紐づいているレコードが削除された際に設定したレコードも削除される
 - 外部キー制約の変更
+　- 関連条件に注意！
+    - 1対多であれば複数系
+    - 1対1であれば単数形
   - 1度削除を行ってから追加する必要がある
   - 下記のように複数テーブルまとめて行える
   ```
@@ -67,6 +102,11 @@ Model.left_joins(:join_table).where(id: 1).or(JoinTable.where(id: 1))
       add_foreign_key :hh_upload_images, :image_files, on_delete: :cascade
     end
   end
+  ```
+  - 別名を指定する(同じテーブルの外部キーを複数カラムに指定する場合)
+  ```
+  t.references :a_user, type: :integer, foreign_key: { to_table: :users, on_delete: :nullify }, comment: 'AID'
+  t.references :b_user, type: :integer, foreign_key: { to_table: :users, on_delete: :nullify }, comment: 'BID'
   ```
 - indexの定義
   - nameは基本なしで良い、デフォルトで勝手に設定してくれる

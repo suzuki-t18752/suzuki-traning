@@ -1154,6 +1154,39 @@
   => "1,2,3"
   ```
 
+- callerメソッド
+  - メソッドの呼び出しまでの流れを表示してくれる
+
+- ERBクラス
+  - eRuby スクリプトを処理するクラス
+  - erbファイルのレンダリング、フォーマットが出来る
+    - ERB.new()の引数にテンプレートを指定する
+      - ERB.new(File.read(filename))
+    - フォーマットする値を変数等に持たせる
+    - resultメソッドでフォーマット後の結果を返す
+    - runにて標準出力に印字し、nilを返す
+
+    ```
+    [1] pry(main)> erb = ERB.new("test <%= test1 %>\ntest <%= test2 %>\n")
+    => #<ERB:0x00007fba0f571c98
+    @_init=#<Class:ERB>,
+    @encoding=#<Encoding:UTF-8>,
+    @filename=nil,
+    @frozen_string=nil,
+    @lineno=0,
+    @src="#coding:UTF-8\n_erbout = +''; _erbout.<< \"test \".freeze; _erbout.<<(( test1 ).to_s); _erbout.<< \"\\ntest \".freeze\n; _erbout.<<(( test2 ).to_s); _erbout.<< \"\\n\".freeze\n; _erbout">
+    [2] pry(main)> test1 = "foo"
+    => "foo"
+    [3] pry(main)> test2 = "bar"
+    => "bar"
+    [4] pry(main)> erb.run
+    test foo
+    test bar
+    => nil
+    [5] pry(main)> erb.result
+    => "test foo\ntest bar\n"
+    ```
+
 - 並列処理
 ```
 [3] pry(main)> 5.times.map {|n| Thread.new { a.test } }
