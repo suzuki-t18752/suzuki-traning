@@ -278,13 +278,123 @@ print $1で1列目
 awk -F'[フィールド区切り文字(複数可能)]' -v '変数=xx' '{awkコマンド}' file
 
 
-
-## mysql < sqlファイル
+## mysql
+### mysql < sqlファイル
 /usr/local/mysql/bin/mysql -t < employees.sql -u root -p
 ファイル内のsqlコマンドを実行する
 
-## mysql -t
+### mysql -t
 表形式を結果を出力する
+
+### mysql -vv
+実行したクエリと実行されたレコード数を表示する
+
+```sql
+$ mysql -unn -pnn -h 999.99.99 -P nn  -e 'SELECT * FROM a limit 3;'
+mysql: [Warning] Using a password on the command line interface can be insecure.
+--------------
+SELECT * FROM a limit 3
+--------------
+
++----+---+---+-----+----------------------------+----------------------------+
+| id | a | b | c   | created_at                 | updated_at                 |
++----+---+---+-----+----------------------------+----------------------------+
+|  1 | 8 | 1 | A01 | 2023-08-22 18:49:45.797440 | 2023-08-22 18:49:45.797440 |
+|  2 | 8 | 1 | A02 | 2023-08-22 18:49:45.889981 | 2023-08-22 18:49:45.889981 |
+|  3 | 8 | 1 | A03 | 2023-08-22 18:49:45.968224 | 2023-08-22 18:49:45.968224 |
++----+---+---+-----+----------------------------+----------------------------+
+3 rows in set (0.00 sec)
+
+Bye
+```
+
+### mysql -e
+直接クエリを実行する
+
+```sql
+$ mysql -unn -pnn -h 999.99.99 -P nn  -e 'SELECT * FROM a limit 10;'
+```
+
+### 使用するDBの指定
+```sql
+use a_table;
+```
+
+
+### 権限を追加する
+- https://qiita.com/shuntaro_tamura/items/2fb114b8c5d1384648aa (追加方法について)
+```sql
+GRANT (権限、UPDATEやSELECT等) ON (テーブルやDB) TO ユーザー
+GRANT SELECT ON a_table.users TO 'application'@'%';
+```
+
+
+# 権限を確認する
+```sql
+show grants for 'application'@'%';
+```
+
+
+### キャッシュ等のメモリのリロード
+INSERT、UPDATE、DELETE (非推奨)で権限を追加、ユーザーの追加等をした際は下記を実行する必要がある
+実行しないと反映されない
+```sql
+FLUSH PRIVILEGES;
+```
+
+
+### [mysql EXPLAIN(INDEXの確認)](https://dev.mysql.com/doc/refman/8.0/ja/explain.html)
+- https://qiita.com/tsurumiii/items/0b70f1a1ee0499be2002
+- 例
+```
+EXPLAIN SELECT * FROM users WHERE id = 1
+```
+```
+結果
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+|  1 | SIMPLE      | users | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL  |
++----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
+```
+
+- id 実行順序
+- select_type
+  - SIMPLE: 単純な SELECT (UNION やサブクエリーを使用しません)
+  - PRIMARY: もっとも外側の SELECT
+  - UNION: UNION 内の 2 つめ以降の SELECT ステートメント
+  - DEPENDENT: UNION 内の 2 つめ以降の SELECT ステートメントで、外側のクエリーに依存します
+  - UNION RESULT: UNION の結果。
+  - SUBQUERY: サブクエリー内の最初の SELECT
+  - DEPENDENT SUBQUERY: サブクエリー内の最初の SELECT で、外側のクエリーに依存します
+  - DERIVED: 派生テーブル SELECT (FROM 句内のサブクエリー)
+  - MATERIALIZED: 実体化されたサブクエリー
+  - UNCACHEABLE SUBQUERY: 結果をキャッシュできず、外側のクエリーの行ごとに再評価される必要があるサブクエリー
+  - UNCACHEABLE UNION: キャッシュ不可能なサブクエリーに属する UNION 内の 2 つめ以降の SELECT
+- table	対象テーブル
+- partitions	テーブルパーティション
+- type
+  - system: テーブルに1行しかない
+  - const: プライマリキー、ユニークキーのルックアップによるアクセス
+  - eq_ref: joinにおいてのconstと同義
+  - ref: constでないインデックスを使って等価検索
+  - range: indexを用いた範囲検索
+  - index: フルインデックススキャン
+  - ALL: フルテーブルスキャン
+  - fulltext: FULLTEXTインデックスによる検索
+  - ref_or_null: refに追加でNULL値でも検索する
+  - index_merge: インデックスマージ最適化を使用
+  - unique_subquery: 効率化のため、サブクエリーを完全に置き換える単なるインデックスルックアップ関数
+  - index_subquery: 働きは、unique_subqueryと同様。サブクエリー内の一意でないインデックスに対して機能する
+- possible_keys	optimizerがテーブルのアクセスに利用可能だと判断したインデックス
+- key	実際にoptimizerによって使用されたキー
+- key_len	選択されたキーの長さ
+- ref
+  - 定数の場合: const
+  - JOINを使用している場合: 結合する相手側のテーブルで検索条件として利用されているカラムが表示される
+- rows	対象テーブルから取得される行の見積もり
+- filtered	テーブル条件によってフィルタ処理される行の推定の割合
+- Extra	optimizerがどのような戦略を立てたかを知ることが出来る
 
 ## timeコマンド
 実行時間の表示
@@ -300,7 +410,11 @@ awk -F'[フィールド区切り文字(複数可能)]' -v '変数=xx' '{awkコ�
 ```
 scp ユーザ名@サーバのホスト名(or IPアドレス):コピーしたいファイル 保存先のパス
 
+サーザーからローカルへ
 scp suzuki@suzuki-web:/opt/suzuki.jp/public/suzuki.html ./
+
+ローカルからサーバーへ
+scp  ./suzuki.html　suzuki@suzuki-web:/opt/suzuki.jp/public/
 ```
 
 ## xargsコマンド
@@ -406,6 +520,55 @@ Merge made by the 'recursive' strategy.
  app/views/s.html.erb    | 15 +++++++++++++++
  config/c.rb             | 10 ++++++++--
 ```
+- 直前のコミット取り消し
+  - git reset --soft HEAD^
+
+- commit メッセージ変更
+  - git commit --amend -m ''
+- 実行出来るタスクの確認を行う
+  - bundle exec cap -T
+
+- 変更を一時保存
+  - git stash
+- 一時保存のリスト
+  - git stash list
+-  最新のスタッシュを適用し、削除
+  - git stash pop
+- N番目のスタッシュを適用し、削除
+  - git stash pop stash@{N}
+- 最新のスタッシュを適用し、残す
+  - git stash apply
+- N番目のスタッシュを適用し、残す
+  - git stash apply stash@{N}
+- 最新のスタッシュを削除
+  - git stash drop
+- N番目のスタッシュを削除
+  - git stash drop stash@{N}
+- スタッシュを全削除
+  - git stash clear
+
+- タグの作成と反映
+```
+git checkout main
+git pull
+git tag v36.46.7
+git push --tags
+```
+
+- タグの削除
+  - git tag -d v36.46.7
+- タグの削除をリモートへ反映する場合
+  - git push -d origin v36.46.7
+  - 反映後にgithubのreleasesも削除する
+- タグの確認
+  - git tag
+
+- 切り戻しをする際
+  - 先に低いバージョンのbranchへチェックアウトする必要がある
+  - git checkout v36.46.6
+  - その後古いバージョンをデプロイする
+
+
 ## yum groupinstall "Development Tools"
 
 [Development Tools](https://qiita.com/old_/items/6f9da09b9af795c11b71)
@@ -490,59 +653,6 @@ WebサーバとWebブラウザなどの間で利用者の認証を行う方式�
 
 ### mysql_ssl_rsa_setup
 SSLを使用した安全な接続と、暗号化されていない接続を介したRSAを使用した安全なパスワード交換をサポートするために必要なSSL証明書とキーファイル、およびRSAキーペアファイルを作成する
-
-### [mysql EXPLAIN(INDEXの確認)](https://dev.mysql.com/doc/refman/8.0/ja/explain.html)
-- https://qiita.com/tsurumiii/items/0b70f1a1ee0499be2002
-- 例
-```
-EXPLAIN SELECT * FROM users WHERE id = 1
-```
-```
-結果
-+----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
-| id | select_type | table | partitions | type  | possible_keys | key     | key_len | ref   | rows | filtered | Extra |
-+----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
-|  1 | SIMPLE      | users | NULL       | const | PRIMARY       | PRIMARY | 4       | const |    1 |   100.00 | NULL  |
-+----+-------------+-------+------------+-------+---------------+---------+---------+-------+------+----------+-------+
-```
-
-- id 実行順序
-- select_type
-  - SIMPLE: 単純な SELECT (UNION やサブクエリーを使用しません)
-  - PRIMARY: もっとも外側の SELECT
-  - UNION: UNION 内の 2 つめ以降の SELECT ステートメント
-  - DEPENDENT: UNION 内の 2 つめ以降の SELECT ステートメントで、外側のクエリーに依存します
-  - UNION RESULT: UNION の結果。
-  - SUBQUERY: サブクエリー内の最初の SELECT
-  - DEPENDENT SUBQUERY: サブクエリー内の最初の SELECT で、外側のクエリーに依存します
-  - DERIVED: 派生テーブル SELECT (FROM 句内のサブクエリー)
-  - MATERIALIZED: 実体化されたサブクエリー
-  - UNCACHEABLE SUBQUERY: 結果をキャッシュできず、外側のクエリーの行ごとに再評価される必要があるサブクエリー
-  - UNCACHEABLE UNION: キャッシュ不可能なサブクエリーに属する UNION 内の 2 つめ以降の SELECT
-- table	対象テーブル
-- partitions	テーブルパーティション
-- type
-  - system: テーブルに1行しかない
-  - const: プライマリキー、ユニークキーのルックアップによるアクセス
-  - eq_ref: joinにおいてのconstと同義
-  - ref: constでないインデックスを使って等価検索
-  - range: indexを用いた範囲検索
-  - index: フルインデックススキャン
-  - ALL: フルテーブルスキャン
-  - fulltext: FULLTEXTインデックスによる検索
-  - ref_or_null: refに追加でNULL値でも検索する
-  - index_merge: インデックスマージ最適化を使用
-  - unique_subquery: 効率化のため、サブクエリーを完全に置き換える単なるインデックスルックアップ関数
-  - index_subquery: 働きは、unique_subqueryと同様。サブクエリー内の一意でないインデックスに対して機能する
-- possible_keys	optimizerがテーブルのアクセスに利用可能だと判断したインデックス
-- key	実際にoptimizerによって使用されたキー
-- key_len	選択されたキーの長さ
-- ref
-  - 定数の場合: const
-  - JOINを使用している場合: 結合する相手側のテーブルで検索条件として利用されているカラムが表示される
-- rows	対象テーブルから取得される行の見積もり
-- filtered	テーブル条件によってフィルタ処理される行の推定の割合
-- Extra	optimizerがどのような戦略を立てたかを知ることが出来る
 
 ### Require all granted [参考](https://www.javadrive.jp/apache/allow/index1.html)
 ディレクトリのアクセス制限を設定していてこの場合は全て許可する設定
@@ -729,3 +839,13 @@ curl -X POST -H "Content-Type: application/json" -d '{"rsv_id":"1"}' http://loca
 4. 処理が終了したらstopボタンを押下する
 5. 確認したい処理の範囲を選択する(画面の遷移状態が表示されているので目的の画面状態を範囲選択する)
   - さらにnetwork欄を開くことでAPIの処理時間を分かる
+
+
+## unicorn
+- ruby on railsを動かす為のwebサーバー
+
+- 再起動
+  - プロセスをフォークして行う
+    - 自分のコピーを作成して古いものは新しいものに処理引継ぎ後削除している
+  - 基本的にはリロードで問題ないが、rubyのバージョンアップ等環境変数が変わるような処理をした際はstopとstartで再起動をする必要がある
+    - 環境変数を新しいものに変える為
