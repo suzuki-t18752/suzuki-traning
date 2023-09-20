@@ -228,6 +228,26 @@ sudo sed -ie '2i skip-grant-tables' /etc/my.cnf
 ## fileコマンド
 拡張子に関係なくファイルの中身からファイルの形式を判断、表示してくれる
 
+## dfコマンド
+ディスクの空き領域（freeスペース）のサイズを集計して表示する
+空き領域は、マウントしているファイルシステムごと、つまり、パーティションごとに表示される
+
+- -h
+  - サイズに応じて読みやすい単位で表示する
+```
+[test ~]$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        3.9G     0  3.9G   0% /dev
+tmpfs           3.9G     0  3.9G   0% /dev/shm
+tmpfs           3.9G   97M  3.8G   3% /run
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+/dev/nvme0n1p1   20G   20G  904M  96% /
+tmpfs           790M     0  790M   0% /run/user/1001
+```
+
+## duコマンド
+ディスクの使用量をディレクトリごとに集計して表示する
+
 ## ctrl + a u e r c z q s
 - a 行の先頭に移動
 
@@ -313,6 +333,11 @@ Bye
 
 ```sql
 $ mysql -unn -pnn -h 999.99.99 -P nn  -e 'SELECT * FROM a limit 10;'
+```
+
+### DBの一覧を表示
+```
+show databases;
 ```
 
 ### 使用するDBの指定
