@@ -17,5 +17,6 @@
   },
   "workbench.editor.untitled.hint": "hidden",
   "editor.accessibilitySupport": "off",
-  "code-eol.crlfCharacter": ""
+  "code-eol.crlfCharacter": "",
+  "workbench.editor.empty.hint": "hidden"
 }

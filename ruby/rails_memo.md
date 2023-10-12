@@ -31,6 +31,9 @@ rails g model Test
 => 2022-06-30 14:17:42.3341992 +0900
 [13] pry(main)> Time.now + 1.month
 => 2022-07-30 14:15:49.2873874 +0900
+# 週初めの日付を取得(始まりの曜日を指定出来る)
+[5] pry(main)> Time.zone.today.beginning_of_week(:sunday)
+=> Sun, 01 Oct 2023
 ```
 
 ## ActiveModel
@@ -122,4 +125,33 @@ Review.create!(
   review_id: '1',
   review_receptions: [ReviewReception.new(reception_type: 'dinner'), ReviewReception.new(reception_type: 'etc')]
 )
+```
+
+## rails whenever
+- railsでcronを管理するライブラリ
+  - cron
+    - 設定されたスケジュールで定期的にプログラムを実行してくれるUNIX系OSの常駐プログラム。
+  - crontab
+    - スケジュールの追加、変更、削除を行うコマンド。
+    - このコマンドの実行によってcrontabファイルというものに、どのプログラムをいつ実行するかが記録される。このスケジュールをもとにcronがプログラムを実行する。
+  - whenever
+    - crontabファイルの設定をrails上で記述できるようにするGem。
+- config/scheduleディレクトリに設定ファイルを置く
+```
+基本: 分 時 日 月 曜日 [実行するコマンドやプログラム]
+
+#1時間おきに実行する
+every :hour do
+  :
+end
+
+#毎週日曜日の午後12時に実行する
+every :sunday, at: '12pm' do
+  :
+end
+
+#毎月27日から31日の0時0分に実行する
+every '0 0 27-31 * *' do
+  :
+end
 ```

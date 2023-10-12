@@ -435,7 +435,7 @@ EXPLAIN SELECT * FROM users WHERE id = 1
 ```
 scp ユーザ名@サーバのホスト名(or IPアドレス):コピーしたいファイル 保存先のパス
 
-サーザーからローカルへ
+サーバーからローカルへ
 scp suzuki@suzuki-web:/opt/suzuki.jp/public/suzuki.html ./
 
 ローカルからサーバーへ
@@ -498,6 +498,25 @@ grep
 指定したディレクトリ以下のファイル内<VirtualHost 192.168.56.3:80>を検索し、<VirtualHost 192.168.56.2:80>に書き換える
 grep -rl '<VirtualHost 192.168.56.3:80>' /usr/local/httpd/httpd-2.4.48/ | xargs sed -i -e "s%<VirtualHost 192.168.56.3:80>%<VirtualHost 192.168.56.2:80>%g"
 ```
+
+## crontabコマンド
+- cronへの指示を行うコマンド
+- -e
+  - cronの設定を編集するコマンド、1番最初は作成が行われる
+  - viエディターと同じ操作
+- -l ログインユーザーが登録したcronの設定を確認する
+  - rootユーザーの場合だけ -l ユーザー名 で他のユーザーの設定を確認出来る
+
+```
+[- ~]$ crontab -l
+@monthly date >> test.log
+[- ~]$ crontab -e
+crontab: installing new crontab
+[- ~]$ crontab -l
+@weekly date >> test.log
+```
+
+
 ## 認証認可の意味違い
 認証とは、相手の身元を確認すること
 認可とは、権限を与えること
@@ -874,3 +893,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"rsv_id":"1"}' http://loca
     - 自分のコピーを作成して古いものは新しいものに処理引継ぎ後削除している
   - 基本的にはリロードで問題ないが、rubyのバージョンアップ等環境変数が変わるような処理をした際はstopとstartで再起動をする必要がある
     - 環境変数を新しいものに変える為
+
+## certbot
+- 自動でSSL証明書を発行できるツール、更新も出来る
+- デフォルトは期限が30日未満の証明書を更新する
