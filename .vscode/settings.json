@@ -15,7 +15,6 @@
       "*.log": "default",
       "*.pdf": "default"
   },
-  "workbench.editor.untitled.hint": "hidden",
   "editor.accessibilitySupport": "off",
   "code-eol.crlfCharacter": "",
   "workbench.editor.empty.hint": "hidden"

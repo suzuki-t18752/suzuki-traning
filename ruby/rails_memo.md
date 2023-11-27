@@ -11,6 +11,40 @@ rails g model Test
 - specモデルテストファイルの作成
 - factorybotファイルの作成
 
+## localeの設定
+- テーブル名やカラム名を設定した言語で表示する為の設定
+```
+ja:
+  activerecord:
+    models:
+      name: 名前マスタ
+    attributes:
+      name:
+        name: 名称
+        name_katakana: 名称(カタカナ)
+        status: ステータス
+      enumerize:
+  enumerize:
+    name:
+      status:
+        normal: 通常
+        katakana: カタカナ
+
+
+
+
+日本語の呼び出し方
+モデル名
+[1] pry(main)> Name.model_name.human
+=> "名前マスタ"
+カラム名
+[3] pry(main)> Name.human_attribute_name(:name)
+=> "名称"
+enumerize
+[2] pry(main)> Name.first.status_text
+=> "通常"
+```
+
 ## 日付の計算
 ```
 [1] pry(main)> Time.now + 1.day
