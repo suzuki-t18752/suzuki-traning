@@ -323,6 +323,14 @@
           irb(main):037:0> '1'.to_c.class
           => Complex
         ```
+      - digitsメソッド
+        - 数値を1桁ずつ分解し、配列にする
+        ```
+        [8] pry(main)> 12345.digits.first
+        => 5
+        [9] pry(main)> 12345.digits
+        => [5, 4, 3, 2, 1]
+        ```
 
 
   - 数値と文字列は暗黙的に変換されない
