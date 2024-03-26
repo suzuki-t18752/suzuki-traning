@@ -92,6 +92,19 @@ Model.where(id: 1).or(Model.where(id: nil))
 Model.left_joins(:join_table).where(id: 1).or(JoinTable.where(id: 1))
 ```
 
+### exists?
+存在チェックが出来る
+```
+[2] pry(main)> A.exists?(id: 1)
+DEBUG   2024-02-21T14:49:44+09:00       application     reqid:nil       rid:nil uid:nil aid:nil
+      A Exists? (3.4ms)  SELECT 1 AS one FROM `As` WHERE `As`.`id` = 1 LIMIT 1
+=> true
+[3] pry(main)> A.exists?(id: 2)
+DEBUG   2024-02-21T14:49:52+09:00       application     reqid:nil       rid:nil uid:nil aid:nil
+      TlImage Exists? (1.2ms)  SELECT 1 AS one FROM `As` WHERE `As`.`id` = 1 LIMIT 1
+=> false
+```
+
 ## ActiveRecord
 - ActiveRecordの変更を行った際にmodelの確認を忘れないように
 - DBの中身によっては変更を行えないこともあるので確認を忘れない
