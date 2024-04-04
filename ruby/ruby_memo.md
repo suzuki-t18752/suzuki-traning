@@ -1037,6 +1037,10 @@
       irb(main):070:0> 'te te te'.split(' ')
       => ["te", "te", "te"]
       ```
+  - 配列内の平均値を求める
+    ```
+    array.sum.fdiv(array.length)
+    ```
 
 
 - ブロック
