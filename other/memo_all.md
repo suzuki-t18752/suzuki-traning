@@ -562,60 +562,62 @@ puttyとubuntuで違うので注意
 その後プルリクエストを画面にて行い、mainへマージをかけて更新する。
 複数人にて作業を行う場合はマージの際に他の作業者の差分をフェッチやプル等で取り込んでくる必要がある(コンフリクト)
 
-- 分岐元ブランチを確認
+### 分岐元ブランチを確認
 ```
 git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -1 | awk -F'[]~^[]' '{print $2}'
 ```
 
+###  リモートを含め全てのブランチを確認する
 ```
--  リモートを含め全てのブランチを確認する
 git branch -a
+```
 
-- リモートのブランチをローカルに取り込む
-git checkout リモートのブランチ名
+### リモートのブランチをローカルに取り込む
+```
+1. git fetchでリモートの情報を取得
+2. git checkout リモートのブランチ名 でブランチを切り替える
 
-- 取り込み後に"detached HEAD ~~~~~~"の表示がある場合下記コマンドでブランチ名を指定する必要がある
+取り込み後に"detached HEAD ~~~~~~"の表示がある場合下記コマンドでブランチ名を指定する必要がある
 git branch 任意のブランチ名
 ```
--  git merge
+
+###  git merge
   - 指定したブランチの変更を取り込む
     - 取り込み元のブランチは消えない
-```
-git merge 取り込みたいブランチ名
+    ```
+    git merge 取り込みたいブランチ名
 
-$ git merge test_20220511
-Merge made by the 'recursive' strategy.
- app/views/s.html.erb    | 15 +++++++++++++++
- config/c.rb             | 10 ++++++++--
-```
-- 直前のコミット取り消し
+    $ git merge test_20220511
+    Merge made by the 'recursive' strategy.
+    app/views/s.html.erb    | 15 +++++++++++++++
+    config/c.rb             | 10 ++++++++--
+    ```
+### 直前のコミット取り消し
   - git reset --soft HEAD^
 
-- commit メッセージ変更
+### commit メッセージ変更
   - git commit --amend -m ''
-- 実行出来るタスクの確認を行う
-  - bundle exec cap -T
 
-- 変更を一時保存
+### 変更を一時保存
   - git stash
-- 一時保存のリスト
-  - git stash list
--  最新のスタッシュを適用し、削除
-  - git stash pop
-- N番目のスタッシュを適用し、削除
-  - git stash pop stash@{N}
-- 最新のスタッシュを適用し、残す
-  - git stash apply
-- N番目のスタッシュを適用し、残す
-  - git stash apply stash@{N}
-- 最新のスタッシュを削除
-  - git stash drop
-- N番目のスタッシュを削除
-  - git stash drop stash@{N}
-- スタッシュを全削除
-  - git stash clear
+  - 一時保存のリスト
+    - git stash list
+  -  最新のスタッシュを適用し、削除
+    - git stash pop
+  - N番目のスタッシュを適用し、削除
+    - git stash pop stash@{N}
+  - 最新のスタッシュを適用し、残す
+    - git stash apply
+  - N番目のスタッシュを適用し、残す
+    - git stash apply stash@{N}
+  - 最新のスタッシュを削除
+    - git stash drop
+  - N番目のスタッシュを削除
+    - git stash drop stash@{N}
+  - スタッシュを全削除
+    - git stash clear
 
-- タグの作成と反映
+### タグの作成と反映
 ```
 git checkout main
 git pull
@@ -636,17 +638,128 @@ git push --tags
   - git checkout v36.46.6
   - その後古いバージョンをデプロイする
 
+### commitを1つまとめる
+- まとめる
+  1. git logでまとめたコミットを確認する
+    ```
+    suzuki@DESKTOP-G7N3ULO:~/suzuki$ git log
+    commit ff3835fb570ca503aa228d616d3e3e7b1cff1111 (HEAD -> test, origin/test)
+    Author: suzuki <test@example.com>
+    Date:   Wed Apr 10 16:02:41 2024 +0900
+
+        test
+
+    commit 194b9bcacdf24ca3f8c04e9b3633dd5182af1234
+    Author: suzuki <test@example.com>
+    Date:   Wed Apr 10 16:01:11 2024 +0900
+
+        test2
+    ```
+  2. git rebaseでコミットをまとめる
+    ```
+    git rebase -i HEAD~~~~
+    ~はまとめたいコミット数分付ける、今回は上記ログでみたコミット2つなので2個付けている
+
+    コマンドを実行すると下記のようにvimエディターが開く
+    pick 8145f1c test
+    pick d90db4a test2
+
+    # Rebase ed7420a..71a6940 onto ed7420a
+    #
+    # Commands:
+    ```
+  3. pick → squashに書き換える
+    - 残したい方はpickのまま、削除したい方をsquashにする
+    - pickを上に配置してそのpickにまとめたいものを下に配置する
+      ```
+      pick 8145f1c test
+      squash d90db4a test2
+      ```
+    - 複数残したい場合
+      - 下記の場合はtestとtest3が残る
+      - testにtest2が入り、test3にtest4が入る
+      ```
+      pick 8145f1c test
+      squash d90db4a test2
+      pick 8145f1c test3
+      squash d90db4a test24
+      ```
+    - 最後にvimエディターなので:wqで編集完了をすると下記のようなコメント編集画面が開く
+      ```
+      # This is a combination of 2 commits.
+      # The first commit's message is:
+
+      test
+
+      # This is the 2nd commit message:
+
+      test2
+      ```
+  4. コメントを編集する
+    - `first commit's`の部分が1行目、`2nd commit`の部分が2行目として残る
+      ```
+      # This is a combination of 2 commits.
+      # The first commit's message is:
+
+      test
+
+      # This is the 2nd commit message:
+
+      test2
+      ```
+    - 1行にしたい場合(削除するだけで良い)
+      ```
+      # This is a combination of 2 commits.
+      # The first commit's message is:
+
+      test test2
+
+      # This is the 2nd commit message:
+
+      ```
+    - 最後にvimエディターなので:wqで編集完了をする
+  5. 完了すると下記のような表示になる
+    ```
+    suzuki@DESKTOP-G7N3ULO:~/suzuki$ git rebase -i HEAD~~~~
+    [detached HEAD 2c86bca64c] test
+    Date: Wed Apr 10 15:29:53 2024 +0900
+    1 files changed, 61 insertions(+), 30 deletions(-)
+    create mode 100644 test.rb
+    Successfully rebased and updated refs/heads/test
+    ```
+  6. git logでcommitがまとまっていることを確認する
+    ```
+    suzuki@DESKTOP-G7N3ULO:~/resraku$ git log
+    commit 2c86bca64c0cecbb7f63308b52b9845bf6d32345 (HEAD -> test)
+    Author: suzuki <test@example.com>
+    Date:   Wed Apr 10 15:29:53 2024 +0900
+
+        test test2
+    ```
+  7. pushする
+   - force pushする必要がある
+    ```
+    git push -f origin test
+    ```
+- エラーが出た際
+  - 下記で変更用のファイルを消す
+  ```
+  rm -fr ".git/rebase-merge"
+  ```
+
 
 ## yum groupinstall "Development Tools"
 
 [Development Tools](https://qiita.com/old_/items/6f9da09b9af795c11b71)
 
 ## sudo yum install cmake ncurses-devel zlib-devel libaio-devel
+```
 (1/5): libaio-devel-0.3.109-13.el7.x86_64.rpm                                                                                                                                               |  13 kB  00:00:00
 (2/5): libarchive-3.1.2-14.el7_7.x86_64.rpm                                                                                                                                                 | 319 kB  00:00:00
 (3/5): zlib-devel-1.2.7-19.el7_9.x86_64.rpm                                                                                                                                                 |  50 kB  00:00:00
 (4/5): ncurses-devel-5.9-14.20130511.el7_4.x86_64.rpm                                                                                                                                       | 712 kB  00:00:00
 (5/5): cmake-2.8.12.2-2.el7.x86_64.rpm
+```
 
 ## yumのパッケージの中には何が入っているかを調べる cmake
   - rpm(アーカイブファイル)
