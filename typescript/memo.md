@@ -143,7 +143,40 @@ main();
 - typescriptの設定ファイル
 - 項目
   - target
-    - 
+    - どのバージョンのjavascriptにコンパイルするのか？
+  - lib
+    - ライブラリの設定
+    - libを指定する際は必ず先頭にtargetと同じものを指定する
+    - NG
+      ```
+      {
+        "compilerOptions": {
+          "target": "es2018"
+          // "lib": []
+        }
+      }
+      ```
+    - OK
+      ```
+      {
+        "compilerOptions": {
+          "target": "es2018",
+          "lib": [
+            "es2018",
+            "esnext.AsyncIterable",
+            "esnext.Array",
+            "esnext.Intl",
+            "esnext.Symbol"
+          ]
+        }
+      }
+      ```
+  - module
+    - モジュールの読み込み方を指定する
+    - commonjs
+      - バックエンド(サーバーサイド)で使われているモジュールの読み込み方法
+    - es2015, es2020, esnext、、、etc
+      - 通称esmoduleと呼ばれ、フロントエンドで使われるモジュール読み込みの解決方法
 ```
 例
 {
