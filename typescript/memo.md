@@ -139,6 +139,37 @@ async function main() {
  
 main();
 ```
+## tsconfig
+- typescriptの設定ファイル
+- 項目
+  - target
+    - 
+```
+例
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "jsx": "react",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["dist", "node_modules"],
+  "compileOnSave": false
+}
+```
+
 ## webpack
   - モージュールバンドラ
     - 複数のファイルを１つにまとめて出力してくれるツールのこと
