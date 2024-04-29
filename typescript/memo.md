@@ -144,6 +144,15 @@ main();
 - 項目
   - target
     - どのバージョンのjavascriptにコンパイルするのか？
+
+    | バージョン | 指定する値| 利用可能なAPI例 |
+    | ---- | ---- | ---- |
+    | Node 8 | ES2017 | Object.entries、Object.values、date.formatToParts |
+    | Node 10 | ES2018 | async iterables、promise.finally、rexexp.groups |
+    | Node 12 | ES2019 | array.flat、array.flatMap、string.trimStart |
+    | Node 14 | ES2020 | string.matchAll |
+    | Node 16 | ES2021 | string.replaceAll |
+
   - lib
     - ライブラリの設定
     - libを指定する際は必ず先頭にtargetと同じものを指定する
