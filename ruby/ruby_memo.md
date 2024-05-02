@@ -1300,3 +1300,50 @@ method(:メソッド名).owner
     - 別名のこと
   - DRY原則
     - Don`t repeat yourselfの略で繰り返しを避けること
+  - 参照の値渡し
+    - rubyは値渡し
+    - 配列でない場合は下記のようにメソッドの引数に入れた変数は呼び出し元では特に変化しない
+      ```
+      [1] pry(main)> def b(a)
+      [1] pry(main)*   a = 1
+      [1] pry(main)* end
+      => :b
+      [2] pry(main)> a = 2
+      => 2
+      [3] pry(main)> b(a)
+      => 1
+      [4] pry(main)> a
+      => 2
+      ```
+    - 配列の場合は下記のようにメソッドの引数として渡した場合呼び出し元も変化する
+      ```
+      [1] pry(main)> def a(b)
+      [1] pry(main)*   b.is_a?(Array) ? b << 1 : b[1] = 2
+      [1] pry(main)* end
+      => :a
+      [2] pry(main)> b = []
+      => []
+      [3] pry(main)> a(b)
+      => [1]
+      [4] pry(main)> b
+      => [1]
+      [5] pry(main)> c = { }
+      => {}
+      [6] pry(main)> a(c)
+      => 2
+      [7] pry(main)> c
+      => {1=>2}
+      ```
+    - ただし配列以外でも破壊的変更を行うと呼び出し元も変化する
+      ```
+      [1] pry(main)> def b(a)
+      [1] pry(main)*   a.strip!
+      [1] pry(main)* end
+      => :b
+      [3] pry(main)> a = ' test '
+      => " test "
+      [4] pry(main)> b(a)
+      => "test"
+      [5] pry(main)> a
+      => "test"
+      ```
