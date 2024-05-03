@@ -154,7 +154,7 @@ main();
     | Node 16 | ES2021 | string.replaceAll |
 
   - lib
-    - ライブラリの設定
+    - 組み込みライブラリの設定
     - libを指定する際は必ず先頭にtargetと同じものを指定する
     - NG
       ```
@@ -186,6 +186,32 @@ main();
       - バックエンド(サーバーサイド)で使われているモジュールの読み込み方法
     - es2015, es2020, esnext、、、etc
       - 通称esmoduleと呼ばれ、フロントエンドで使われるモジュール読み込みの解決方法
+  - types
+    - デフォルトでは、すべての表示されている@typesパッケージがコンパイル時にインクルードされる
+    - typesを設定すると、リストに列挙したパッケージのみがインクルードされる
+    ```
+    例
+    {
+      "compilerOptions": {
+        "types": ["node", "lodash", "express"]
+      }
+    }
+    ```
+  - outDir
+    - コンパイル結果の出力先ディレクトリ
+    - 未指定だとtsファイルと同ディレクトリに出力される
+  - outFile
+    - コンパイル結果を一つのファイルにまとめる（true/false）
+    - outFileを指定した場合はoutDirオプションは無視される
+  - rootDir
+    - コンパイル対象のソースコードが含まれるルートディレクトリ
+  - baseUrl
+    - 絶対パス指定じゃない場合、どこを基準のフォルダにするのか
+  - removeComments
+    - TS→JS変換時にコメントを削除する(true/false)
+    - デフォルトはfalse
+  - preserveConstEnums
+    - const enum定義をJSコンパイル時に消すか残すか（true/false)
 ```
 例
 {
