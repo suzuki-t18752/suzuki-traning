@@ -45,6 +45,12 @@ enumerize
 => "通常"
 ```
 
+### コントローラークラスのlocal
+```
+I18n.t('controllers.test/users.test_message')
+=> 'テストメッセージ'
+```
+
 ## 日付の計算
 ```
 [1] pry(main)> Time.now + 1.day
