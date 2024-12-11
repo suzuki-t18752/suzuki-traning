@@ -778,7 +778,7 @@ git push --tags
     ```
   6. git logでcommitがまとまっていることを確認する
     ```
-    suzuki@DESKTOP-G7N3ULO:~/resraku$ git log
+    suzuki@DESKTOP-G7N3ULO:~/suzuki$ git log
     commit 2c86bca64c0cecbb7f63308b52b9845bf6d32345 (HEAD -> test)
     Author: suzuki <test@example.com>
     Date:   Wed Apr 10 15:29:53 2024 +0900

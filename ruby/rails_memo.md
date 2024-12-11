@@ -107,7 +107,7 @@ DEBUG   2024-02-21T14:49:44+09:00       application     reqid:nil       rid:nil 
 => true
 [3] pry(main)> A.exists?(id: 2)
 DEBUG   2024-02-21T14:49:52+09:00       application     reqid:nil       rid:nil uid:nil aid:nil
-      TlImage Exists? (1.2ms)  SELECT 1 AS one FROM `As` WHERE `As`.`id` = 1 LIMIT 1
+      A Exists? (1.2ms)  SELECT 1 AS one FROM `As` WHERE `As`.`id` = 1 LIMIT 1
 => false
 ```
 
@@ -208,3 +208,39 @@ every '0 0 27-31 * *' do
   :
 end
 ```
+
+## ActionController::Parameters
+
+- 値の追加
+  ```
+  [3] ActionController::Parameters.new(test: 1)
+  => #<ActionController::Parameters {"test"=>1} permitted: false>
+  [4] a= ActionController::Parameters.new(test: 1)
+  => #<ActionController::Parameters {"test"=>1} permitted: false>
+  [5] b = a.merge('test2': 2)
+  => #<ActionController::Parameters {"test"=>1, "test2"=>2} permitted: false>
+  ```
+
+- permittedがtrueとfalseの違い
+  - trueの場合をストロングパラメータという
+  - ストロングパラメータの場合のみレコードの作成や更新が行える
+  - falseの場合は`ActiveModel::ForbiddenAttributesError`が発生する
+  - 例:
+    - falseの場合
+      ```
+      [15] Test.last.update!(false_request_params)
+      DEBUG   2024-12-11T11:39:44+09:00       application
+            CACHE Test Load (0.0ms)  SELECT `tests`.* FROM `tests` ORDER BY `tests`.`id` DESC LIMIT 1
+      DEBUG   2024-12-11T11:39:44+09:00       application
+        ActiveModel::ForbiddenAttributesError: ActiveModel::ForbiddenAttributesError
+        from /test/vendor/bundle/ruby/3.2.0/gems/activemodel-6.1.4.4/lib/active_model/forbidden_attributes_protection.rb:23:in `sanitize_for_mass_assignment'
+      ```
+    - trueの場合
+      ```
+      [16] Test.last.update!(true_request_params)
+      DEBUG   2024-12-11T11:40:17+09:00       application
+            CACHE Test Load (0.0ms)  SELECT `tests`.* FROM `tests` ORDER BY `tests`.`id` DESC LIMIT 1
+      DEBUG   2024-12-11T11:40:17+09:00       application
+        ActiveModel::UnknownAttributeError: unknown attribute 'extra_key' for Test.
+        from /test/vendor/bundle/ruby/3.2.0/gems/activemodel-6.1.4.4/lib/active_model/attribute_assignment.rb:51:in `_assign_attribute'
+      ```
