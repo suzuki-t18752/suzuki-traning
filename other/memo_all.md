@@ -451,6 +451,9 @@ curl -X POST -H "Content-Type: application/json" -d '{"rsv_id":"1"}' http://loca
 [suzuki@suzuki-t siege-4.1.1]$ sudo cp /etc/profile /etc/profile_bak
 
 # mysql
+### UNIONよりUNION ALLの方がよい理由
+UNIONは重複を削除する為にソート処理が走るからUNION ALLよりも遅い
+
 ### mysql < sqlファイル
 /usr/local/mysql/bin/mysql -t < employees.sql -u root -p
 ファイル内のsqlコマンドを実行する
