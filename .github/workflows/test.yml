@@ -1,0 +1,15 @@
+name: Test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: show the current directory
+        run: |
+          pwd
+          ls -la

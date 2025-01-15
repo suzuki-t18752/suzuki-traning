@@ -4,6 +4,9 @@
 ```
 rails g model モデル名
 rails g model Test
+
+カラムの追加などマイグレーションファイル単体を作成したい場合
+rails g migration AddColumnColumnNameToTest
 ```
 - マイグレーションファイルの編集
 - モデルファイルの編集
@@ -116,6 +119,35 @@ DEBUG   2024-02-21T14:49:52+09:00       application     reqid:nil       rid:nil 
 - DBの中身によっては変更を行えないこともあるので確認を忘れない
   - 例: そのカラムにnullが入っているにも関わらずnot null制約を入れようとした場合
     - 予めそのカラムがnullでないようにそのレコードを削除したり、値を入れるようにする
+
+### 生のSQLで結果を取得する
+- execute
+  - 配列で結果が返ってくる(値のみ)
+    ```
+    pry(main)> ::ActiveRecord::Base.connection.execute('SELECT id FROM users LIMIT 1').to_a
+    => [[6]]
+    ```
+
+- select_all
+  - ハッシュで結果が返ってくる(キーと値)
+    ```
+    pry(main)> ::ActiveRecord::Base.connection.select_all('SELECT id FROM users LIMIT 1').to_a
+    => [{"id"=>6}]
+    ```
+
+### バインド変数でSQLインジェクションを防止
+- sanitize_sql_array
+  - Railsが提供するヘルパーメソッドで、SQLクエリを文字列として構築する際に、動的なパラメータを安全に埋め込むためのもの
+  - クエリとパラメータを配列で渡す
+    ```
+    email = "test@example.com"
+    query = ActiveRecord::Base.sanitize_sql_array(["SELECT * FROM users WHERE email = ?", email])
+
+    # 組み立てたSQLクエリを実行
+    result = ActiveRecord::Base.connection.execute(query)
+    result.each { |row| puts row }
+    ```
+
 ## active record associations
 - https://railsguides.jp/association_basics.html
 
