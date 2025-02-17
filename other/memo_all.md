@@ -275,6 +275,49 @@ tmpfs           790M     0  790M   0% /run/user/1001
 
 - s コマンド入力ができないように画面をロックする
 
+## nohupコマンド
+- sshの接続が切れてもプロセスを実行し続けてくれるコマンド
+- 他のコマンドの前に付けて使う
+- デフォルトではnohup.outにコマンド実行時の標準出力を行う
+
+```
+suzuki@DESKTOP-G7N3ULO:~$ nohup echo 'test'
+nohup: ignoring input and appending output to 'nohup.out'
+
+suzuki@DESKTOP-G7N3ULO:~$ cat nohup.out
+test
+```
+
+## niceコマンド
+- プロセスの優先度を変えるコマンド
+- 他のコマンドの前に付けて使う
+- オプション
+  - -n 数値
+    - 優先度を設定する
+    - 数値の部分は-19~19まで入力可で数値が小さくなるほど優先度が高い
+    - -19が一番優先度が高い
+    - 19が一番優先度が低い
+
+```
+nohupと組み合わせると下記のように使う
+
+suzuki@DESKTOP-G7N3ULO:~$ nohup nice -n 1 echo 'test'
+nohup: ignoring input and appending output to 'nohup.out'
+```
+
+## &コマンド
+  - コマンドの最後に&を付けると&の前にあるコマンドがバックグラウンドで実行されるようになる
+  - 実行するとプロセスIDが表示される
+  - ctrl+Cで他の作業が行える
+
+```
+suzuki@DESKTOP-G7N3ULO:~$ nohup nice -n 1 echo 'test' &
+[1] 11600
+suzuki@DESKTOP-G7N3ULO:~$ nohup: ignoring input and appending output to 'nohup.out'
+^C
+[1]+  Done                    nohup nice -n 1 echo 'test'
+```
+
 ## exit codeとその意味
 コンピュータプログラミングにおけるプロセスの終了ステータス
 
@@ -383,6 +426,9 @@ grep
 
 指定したディレクトリ以下のファイル内<VirtualHost 192.168.56.3:80>を検索し、<VirtualHost 192.168.56.2:80>に書き換える
 grep -rl '<VirtualHost 192.168.56.3:80>' /usr/local/httpd/httpd-2.4.48/ | xargs sed -i -e "s%<VirtualHost 192.168.56.3:80>%<VirtualHost 192.168.56.2:80>%g"
+
+grepで検索したファイル内をさらに検索する
+grep -rl TableFinder app/ lib/ | xargs grep guest_min
 ```
 
 ## crontabコマンド
@@ -1103,3 +1149,25 @@ https://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%90%E3%83%B3_(Unix)#:~:text=%E3%82%
 ## コンテキスト context
 - 文脈、前後関係、事情、背景、状況など
 - ITの分野では、利用者の意図や状況、環境などの総体を表したり、同じ処理や記述でも状況に応じて動作などが異なる場合に、その選択基準となる判断材料や条件などを指す
+
+## cookie
+サーバーから発行され、ブラウザに覚えさせる文字列
+http通信は基本的にステートレス(前に行った操作を覚えない)ので前に行った操作がなんだったかをブラウザに記憶させることに次の操作で前の操作を一緒にして送る
+・ステートレスの逆、ステートフルの例
+客「ハンバーガーセットをください。」
+店「サイドメニューは何になさいますか？」
+客「ポテトで。」
+店「ドリンクは何にしますか？」
+客「コーラで。」
+・ステートレスの例
+客「ハンバーガーセットをください。」
+店「サイドメニューは何になさいますか？」
+客「ハンバーガーセットをポテトでお願いします。」
+店「ドリンクは何にしますか？」
+客「ハンバーガーセットをポテトとコーラでお願いします。」
+
+## セッション
+cookieでは生の文字列を扱う為、ユーザーのIDやパスワードをブラウザを渡す訳にはいかない。
+その為、機密情報を含むログインの管理の為にセッションを使う。
+パスワードなどの生の情報をサーバーから送らず、機密情報に紐づく適当な文字列(セッションID)をcookieとして送る。
+このセッションIDを確認することでそのブラウザがログインしているアカウントか？などを確認することが出来る。
