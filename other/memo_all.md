@@ -462,8 +462,13 @@ puttyとubuntuで違うので注意
 
 ## curlでpostを行う
 ```
-curl -X POST -H "Content-Type: application/json" -d '{"rsv_id":"1"}' http://localhost:3000/api/v1/
+curl -X POST -H "Content-Type: application/json" -H "Authorization: Bearer xxx" -d '{"test_id":"1"}' http://localhost:3000/api/test
 ```
+
+- -X POST: POSTでリクエストを投げるときに使う
+- -H: リクエストヘッダを指定する時に使う
+  - 今回はリクエストボディとしてjsonデータを送信したいので、Content-Type: application/json を指定する
+- -d: リクエストボディを指定する
 
 ## yum groupinstall "Development Tools"
 
