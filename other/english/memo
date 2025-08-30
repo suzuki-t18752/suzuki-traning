@@ -1,0 +1,176 @@
+# english
+## be動詞
+- 3つのパターンで使われる
+  - 変わらない性質
+    - I am from tokyo
+  - 一時的な状況
+    - I am tired
+  - どこに(ものや人)いる、ある
+    - I am in bed
+- 一般動詞との使い分け
+  - be動詞: 静的
+    - 情景を表す、状態
+    - There are cat in his house(彼の家には猫がいます)
+  - 一般動詞: 動的
+    - 積極的な行動を表す、動作や習慣
+    - He has cat(彼は猫を飼っている)
+- 否定文
+  - He is tired → He is not tired
+    - be動詞のあとにnotをつける
+  - 一般動詞の場合
+    - They come today → They do not come today → They not come today
+    - notを一般動詞の前につけるだけだが、実はdoが隠れている
+- 疑問文
+  - He is tired → Is he tired?
+    - be動詞を先頭にもってくる
+  - 一般動詞の場合
+    - They come today → Do they come today
+      - doを先頭につけるだけだが、否定文のdoが隠れていることを考えるとbe動詞と同じことをしているというのが分かる
+      - 昔は肯定文でも常にdoが入っていたらしい、現代では強調する際に使う
+        - They do come today
+
+## 疑問詞
+- 8W1H
+  - what: 何が、何に、何を
+  - who: 誰が、誰に、誰を
+  - where: どこに、どこへ、どこで
+  - when: いつ
+  - why: なぜ
+  - which: どちらが、どちらに、どちらを、どちらの、どれが、どれに、どれを、どれの
+  - whose: 誰の
+  - whom: 誰に、誰を
+    - 最近はwhoに省略されることが多い
+    - ただビジネスなど文章で書く際はこちらを使った方が良い
+  - how: どのように、どれくらい
+- 疑問詞はyes、no以外で答えを質問するもの
+- 疑問詞は文頭へ置く
+  - What do you want?(何が欲しいですか？)
+  - Who did you meet there?(そこで誰に会ったのですか？)
+  - Where does he go?(彼はどこへ行くのですか？)
+  - When is your birthday?(あなたの誕生日はいつですか？)
+  - Why are you so busy?(なぜ、そんなに忙しいのですか？)
+  - Which girl your daughter?(どこの女の子があなたの娘ですか？)
+  - Whose pen is this?(これは誰のペンですか？)
+  - Whom is this book about?(この本は誰について書かれてものですか？)
+  - How can we buy the tickets?(チケットはどうすれば買えますか？)
+- 間接疑問文
+  - 間接疑問文の場合は疑問詞が文中に入る
+    - 私は、彼がどこへ行くのか分かりません
+      - ‪✕‬ I don't know where does he go?
+      - 〇 I don't know where he goes.
+      - 文の途中の疑問詞は肯定文として扱う
+- whoとwhatが主語になる
+  - Who runs the firstest?(誰がいちばん早く走れますか？)
+  - What happned?(何が起こったの？) 
+  - 通常疑問文を作る際、DoやDidなどのbe動詞を文頭へ置くが、whoやwhatなどの疑問詞も文頭へ置くルールがあるので2つのルールがぶつかる
+  - そこで、be動詞を外すことで肯定文のような語順で疑問文にするようになっている
+
+## 命令文
+- 主語を省略して、動詞を文頭におく
+  - (You) Open the window(窓を開けなさい)
+  - (You) Don't open the window(窓を開けないで)
+- 主語を省略するのは目の前の人にだけ使う文だから
+- 動詞の原型を使うのか？
+  - いつそれをやるのか、時制が曖昧だから逃げとして
+  - 日本語でいう「さっさと開ける！」など強い命令文を使う場合に、動詞の原型になることがほとんどだから
+
+## 英語は語順が命！！！！ (基本文型)
+- 文型(5文型ある)
+  - 第1文型: S(主語)＋V(述語)
+    - I go (私はいきます)
+  - 第2文型
+    - S＋V＋C(補語)
+      - I am a student (私は生徒です)
+      - He is busy (彼は忙しい)
+  - 第3文型
+    - S＋V＋O(目的語)
+      - I meet her (私は彼女に会います)
+      - He wants a car (彼は車を欲しがっています)
+  - 第4文型
+    - S＋V＋IO(間接目的語)＋DO(直接目的語)
+      - I give her a ring (私は彼女に指輪をあげます)
+      - ～に、～をという形
+      - なぜ間接目的語が先にくるのか？
+        - 英語の特性でより伝えたいことを先にくるようにするため
+        - 順番は、「重要度」で決まる
+  - 第4文型→第3文型
+    - 直接目的語と間接目的語を入れ替える必要がある場合
+      - 「彼女に何をあげるの？」と聞かれた場合、「彼女に」よりも「指輪を」を強調する必要がある
+        - 第4文型の場合、順番によって自動的に～に、～をが決まるので、上を表現すると「指輪に彼女を」という変な文になってしまう
+        - これを防ぐには前置詞を使う！
+          - I give a ring to her (私は指輪を彼女にあげます)
+          - この場合、第3文型扱いになる
+    - toとforの使い分け 
+      - 相手が必要かどうかで使い分ける
+      - give、lend、send、tell、show
+        - I give a ring to her (私は指輪を彼女にあげます)
+        - to→相手がいないとできない動詞
+      - buy、make、cook、get、produce
+        - I buy a ring for her (私は指輪を彼女に買います)
+        - for→独りでもできる動詞
+  - 第5文型
+    - S＋V＋O＋C
+      - I named my cat ume (私はうちの猫をウメと名付けました)
+      - I want to make my wife happy (私は自分の妻を幸せにしたいです)
+      - O(目的語)とC(補語)の関係
+        - 第2文型に変形することができる
+        - I named my cat ume → My cat is Ume
+        - I want to make my wife happy → My wife will be happy
+
+## 冠詞 
+- a、an、theのこと
+  - This is a pen (これは1つのペンです)
+  - I eat an apple every morning (私は毎朝りんごを1つ食べます)
+  - The light is on (そのライトはついています)
+- 不定冠詞(a、an)
+  - 1つの～という意味
+  - a ＋ 可算名詞の単数形
+    - 数えられる名詞が1つの時に名詞の前におく
+    - waterのように液体はかぞえられないのでaは付けられない
+    - またMt.Fuji(富士山)のよつに世界に1つしかないものにも付けない
+  - たくさんの中にある1つというニュアンス
+    - 1つ → どれでも良い
+    - Please pick a pen (「どれでもいいので」ペンを1本取ってください)
+  - まるまる1つというニュアンス
+    - I ate a pork (私は豚をまるまる1頭分食べました)
+      - 豚をまるまる1頭食べたというとんでもない文になってしまうので注意
+    - I ate a slice of pork (私は豚肉を1枚食べました)
+      - a slice of (1切れの)を使うと良い
+    - 他にも
+      - a bag of ～ (1袋の～)
+      - a bottle of (ボトル1本の～)
+      - a bunch of (1束の～)
+      - a bowl of (ボウル、お椀1杯分の～)
+      - a cup of (カップ1杯分の～)
+      - a couple of (一対の～)
+      - a can of (一缶の～)
+      - a glass of (コップ1杯の～)
+      - a head of (1株の～)
+      - a pair of (一対の～)
+      - a piece of (1切れの～,1片の～)
+      - a slice of (1切れの～)
+      - a scoop of (1すくい分の～)
+      - a spoonful of (スプーンいっぱいの～)
+  - aとanの使い分け
+    - 発音が母音で始まる単語にはanを使う
+      - an apple
+      - × an university → a university
+      - × a FBI → an FBI
+- 定冠詞
+  - the
+    - 使い方
+      - 基本: その～
+      - 隠れニュアンス: 例の～
+        - 共通認識しているものを指す時に使う
+    - thatとの使い分け
+      - thatも同じようにその～、あの～という意味
+      - thatは指示代名詞とも呼ばれるため、指を指して話すような時にthatを使う
+      - theは目の前にはないけどお互いに知識として認識しているような時に使う
+    - 読み方
+      - 母音で始まる単語の場合は「ジ」
+        - the apple
+        - the FBI
+      - 子音で始まる単語の場合は「ザ」
+        - the university
+ 
+## 前置詞
