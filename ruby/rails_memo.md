@@ -54,6 +54,38 @@ I18n.t('controllers.test/users.test_message')
 => 'テストメッセージ'
 ```
 
+## 現在時刻の取得
+```
+> Time.currentとTime.zone.now、model.update(updated_at:
+  xx)でxxに指定する場合はどちらが良いでしょうか？
+  ⎿ ⧉ Selected 1 lines from spec/factories/pos_seatings.rb in Cursor
+● model.update(updated_at:
+  xx)で指定する場合は、**Time.current**を使用するのが良いです。
+  理由：
+  1. Rails標準の推奨
+    - RailsではTime.currentが推奨されています
+    - ActiveRecordのタイムスタンプ（created_at、updated_at）も内部的
+  にTime.currentを使用
+  2. タイムゾーン設定の一貫性
+    - Time.currentはTime.zoneが設定されていればTime.zone.nowを返し、
+  設定されていなければTime.nowを返す
+    - つまり、アプリケーションの設定に応じて適切に動作する
+  3. コードの簡潔性
+    - Time.currentの方が短くて読みやすい
+  # 推奨
+  model.update(updated_at: Time.current)
+  # 動作は同じだが冗長
+  model.update(updated_at: Time.zone.now)
+  実際のRailsのソースコードでも：
+  # ActiveRecord::Timestamp
+  def current_time_from_proper_timezone
+    self.class.default_timezone == :utc ? Time.now.utc :
+  Time.current
+  end
+  というように、Time.currentが使われています。
+  したがって、**Time.current**を使用することをお勧めします。
+```
+
 ## 日付の計算
 ```
 [1] pry(main)> Time.now + 1.day
